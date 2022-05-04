@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @RestController
-@CrossOrigin (origins = "http://ip21kw2.sit.kmutt.ac.th:80")
+@CrossOrigin (origins = "http://ip21kw2.sit.kmutt.ac.th")
 @RequestMapping("/api/booking")
 class EventController {
     @Autowired
