@@ -11,9 +11,8 @@ import sit.int221.oasip.Service.EventService;
 
 import java.util.List;
 
-
-@RestController
 @CrossOrigin (origins = "http://ip21kw2.sit.kmutt.ac.th")
+@RestController
 @RequestMapping("/api/booking")
 class EventController {
     @Autowired
@@ -33,7 +32,7 @@ class EventController {
 
     //Add new Event
     @PostMapping("")
-    public Event create(@RequestBody EventDTO newEvent){
+    public Event create(@RequestBody Event newEvent){
         return service.save(newEvent);
     }
 

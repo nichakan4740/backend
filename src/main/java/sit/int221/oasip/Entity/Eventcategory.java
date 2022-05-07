@@ -32,4 +32,8 @@ public class Eventcategory {
     @OneToMany(mappedBy = "eventCategoryID")
     private Set<Event> event ;
 
+//    @OneToOne
+//    @JoinColumn(name = "eventID_event")
+//    private Event event;
+
 }

@@ -46,7 +46,7 @@ public class EventService {
     }
 
     //Add new Event
-    public Event save(EventDTO newEvent) {
+    public Event save(Event newEvent) {
         Event e = modelMapper.map(newEvent, Event.class);
         return repository.saveAndFlush(e);
     }
@@ -71,7 +71,7 @@ public class EventService {
     }
     private Event mapEvent(Event existingEvent, Event updateEvent) {
         existingEvent.setBookingName(updateEvent.getBookingName());
-        existingEvent.setEventCategory(updateEvent.getEventCategory());
+//        existingEvent.setEventCategory(updateEvent.getEventCategory());
         existingEvent.setEventEmail(updateEvent.getEventEmail());
         existingEvent.setEventDuration(updateEvent.getEventDuration());
         existingEvent.setEventNotes(updateEvent.getEventNotes());
