@@ -5,11 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.LocalTime;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,8 +17,8 @@ import javax.persistence.GenerationType;
 @Table(name = "event")
 public class Event {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "eventID", nullable = false)
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "bookingName", nullable = false, length = 100)
@@ -44,7 +40,7 @@ public class Event {
     private Integer eventDuration;
 
 
-//    @JsonIgnore
+    //    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "eventCategoryID")
     private Eventcategory eventCategoryID;
