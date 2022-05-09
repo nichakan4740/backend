@@ -1,4 +1,4 @@
-package sit.int221.oasip;
+/* package sit.int221.oasip;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -14,4 +14,4 @@ public class CorsConfigurer implements WebMvcConfigurer {
                .allowedMethods("GET", "POST", "HEAD", "POST", "DELETE");
  }
  
- }
+ } */
