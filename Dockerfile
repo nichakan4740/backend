@@ -4,7 +4,8 @@ WORKDIR /backend
 COPY pom.xml /backend
 COPY src /backend/src
 RUN mvn -f pom.xml clean
-RUN mvn install -DskipTests
+RUN mvn install -DskipTests=false
+RUN mvn install -Dmaven.test.skip=true
 
 FROM openjdk:12
 COPY --from=build /backend/target/*.jar app.jar
