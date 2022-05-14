@@ -9,6 +9,8 @@ import java.time.Instant;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 
 
 @Getter
@@ -24,6 +26,8 @@ public class Event {
     @Column(name = "bookingName", nullable = false, length = 100)
     private String bookingName;
 
+    @NotEmpty
+    @Email
     @Column(name = "eventEmail", length = 50)
     private String eventEmail;
 
@@ -36,8 +40,8 @@ public class Event {
     @Column(name = "eventStartTime", nullable = false)
     private Instant eventStartTime;
 
-    @Column(name = "eventDuration", nullable = false)
-    private Integer eventDuration;
+//    @Column(name = "eventDuration", nullable = false)
+//    private Integer eventDuration;
 
 
     //    @JsonIgnore

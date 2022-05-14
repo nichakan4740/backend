@@ -73,7 +73,7 @@ public class EventService {
         existingEvent.setBookingName(updateEvent.getBookingName());
 //        existingEvent.setEventCategory(updateEvent.getEventCategory());
         existingEvent.setEventEmail(updateEvent.getEventEmail());
-        existingEvent.setEventDuration(updateEvent.getEventDuration());
+//        existingEvent.setEventDuration(updateEvent.getEventDuration());
         existingEvent.setEventNotes(updateEvent.getEventNotes());
         existingEvent.setEventStartTime(updateEvent.getEventStartTime());
         existingEvent.setEventNotes(updateEvent.getEventNotes());

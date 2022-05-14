@@ -2,6 +2,7 @@ package sit.int221.oasip.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sit.int221.oasip.DTO.EventDTO;
@@ -32,7 +33,7 @@ class EventController {
 
     //Add new Event
     @PostMapping("")
-    public Event create(@RequestBody Event newEvent){
+    public Event create(@Validated  @RequestBody Event newEvent){
         return service.save(newEvent);
     }
 
