@@ -20,10 +20,8 @@ public class EventDTO {
     private Integer id;
     private String bookingName;
     private String eventEmail;
-//    private String eventCategory;
     private String eventNotes;
     private Instant eventStartTime;
-//    private Integer eventDuration;
 
 //    @JsonIgnore
     private Eventcategory eventCategoryID;

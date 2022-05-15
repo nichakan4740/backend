@@ -31,10 +31,10 @@ public class EventService {
     //Get all Event
     public List<EventDTO> getAllEvent() {
         List<Event> event = repository.findAll();
-        return listMapper.mapList(event, EventDTO.class , modelMapper);
+        return listMapper.mapList(event, EventDTO.class, modelMapper);
     }
 
-    //Get all Event with id
+    //Get Event with id
     public EventDTO getSimpleCustomerById(Integer id) {
         Event event = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -50,6 +50,7 @@ public class EventService {
         Event e = modelMapper.map(newEvent, Event.class);
         return repository.saveAndFlush(e);
     }
+
 
     //delete event with id = ?
     public void deleteById(Integer id) {

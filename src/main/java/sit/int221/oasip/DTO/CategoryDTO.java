@@ -18,7 +18,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CategoryDTO {
-
     private Integer id;
     private String eventCategoryName;
     private String eventCategoryDescription;
