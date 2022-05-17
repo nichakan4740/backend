@@ -8,5 +8,4 @@ RUN mvn install -DskipTests
 
 FROM openjdk:12
 COPY --from=build /backend/target/*.jar app.jar
-EXPOSE 8080
 ENTRYPOINT ["java","-jar","app.jar"]
