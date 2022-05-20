@@ -12,17 +12,18 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalTime;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class EventDTO {
-    private Integer id;
-    private String bookingName;
-    private String eventEmail;
-    private String eventNotes;
-    private Instant eventStartTime;
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public class EventDTO {
+        private Integer id;
+        private String bookingName;
+        private String eventEmail;
+        private String eventNotes;
+        private Instant eventStartTime;
+        private Integer eventDuration;
 
-//    @JsonIgnore
-    private Eventcategory eventCategoryID;
-}
+    //    @JsonIgnore
+        private Eventcategory eventCategoryID;
+    }

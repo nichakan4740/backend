@@ -26,7 +26,7 @@ public class Event {
     private Integer id;
 
     @NotEmpty
-    @Size(max = 100 , message = "BookingName is not empty and must between 0 - 100")
+    @Size(min = 1 , max = 100 , message = "BookingName is not empty and must between 0 - 100")
     @Column(name = "bookingName", nullable = false, length = 100)
     private String bookingName;
 
@@ -42,6 +42,10 @@ public class Event {
     @NotNull(message = "StartTime is not empty")
     @Column(name = "eventStartTime", nullable = false)
     private Instant eventStartTime;
+
+    @NotNull(message = "Duration is not null")
+    @Column(name = "eventDuration", nullable = false)
+    private Integer eventDuration;
 
     //    @JsonIgnore
     @ManyToOne

@@ -2,6 +2,7 @@ package sit.int221.oasip.Service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,13 +22,10 @@ import java.util.List;
 public class CategoryService {
     @Autowired
     private EventCategoryRepository repository;
-
     @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     private ListMapper listMapper;
-
     //Get all Category
     public List<CategoryDTO> getAllCategory() {
         List<Eventcategory> eventcategories = repository.findAll();
@@ -41,7 +39,6 @@ public class CategoryService {
                         HttpStatus.NOT_FOUND, "Event id " + id +
                         "Does Not Exist !!!"
                 ));
-
         return modelMapper.map(eventcategory, CategoryDTO.class);
     }
 

@@ -2,6 +2,7 @@ package sit.int221.oasip.Service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,14 +21,10 @@ import java.util.List;
 public class EventService {
     @Autowired
     private EventRepository repository;
-
     @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     private ListMapper listMapper;
-
-
     //Get all Event
     public List<EventDTO> getAllEvent() {
         List<Event> event = repository.findAll();
@@ -71,13 +68,12 @@ public class EventService {
         return repository.saveAndFlush(event);
     }
     private Event mapEvent(Event existingEvent, Event updateEvent) {
-        existingEvent.setBookingName(updateEvent.getBookingName());
+//        existingEvent.setBookingName(updateEvent.getBookingName());
 //        existingEvent.setEventCategory(updateEvent.getEventCategory());
-        existingEvent.setEventEmail(updateEvent.getEventEmail());
+//        existingEvent.setEventEmail(updateEvent.getEventEmail());
 //        existingEvent.setEventDuration(updateEvent.getEventDuration());
         existingEvent.setEventNotes(updateEvent.getEventNotes());
         existingEvent.setEventStartTime(updateEvent.getEventStartTime());
-        existingEvent.setEventNotes(updateEvent.getEventNotes());
 
         return existingEvent;
     }
