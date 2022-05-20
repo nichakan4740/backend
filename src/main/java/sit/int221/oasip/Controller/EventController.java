@@ -1,6 +1,7 @@
 package sit.int221.oasip.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,9 @@ import java.util.List;
 class EventController {
     @Autowired
     private EventService service;
+
+    @Autowired
+    private EventRepository repository;
 
     //Get all Event
     @GetMapping("")
@@ -47,4 +51,15 @@ class EventController {
     @PutMapping("/{id}")
     public Event update(@RequestBody Event updateEvent, @PathVariable Integer id) {
         return service.updateId(updateEvent , id);
-    }}
+    }
+
+//    @GetMapping("")
+//    public List<Event> findAll(String keyword){
+//        if (keyword != null) {
+//            return repository.findAll(keyword);
+//        }
+//        return repository.findAll();
+//    }
+
+
+}
