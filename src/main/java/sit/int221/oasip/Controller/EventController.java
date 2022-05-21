@@ -20,12 +20,14 @@ class EventController {
     @Autowired
     private EventService service;
 
+    @Autowired
+    private EventRepository repository;
+
     //Get all Event
     @GetMapping("")
     public List<EventDTO> getAllEvent(@RequestParam(defaultValue = "eventStartTime") String sortBy){
         return service.getAllEvent(sortBy);
     }
-
     //Get Event with id
     @GetMapping("/{id}")
     public EventDTO getCustomerById (@PathVariable Integer id) {
@@ -49,14 +51,5 @@ class EventController {
     public Event update(@RequestBody Event updateEvent, @PathVariable Integer id) {
         return service.updateId(updateEvent , id);
     }
-
-//    @GetMapping("")
-//    public List<Event> findAll(String keyword){
-//        if (keyword != null) {
-//            return repository.findAll(keyword);
-//        }
-//        return repository.findAll();
-//    }
-
 
 }
