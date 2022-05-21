@@ -6,9 +6,7 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalTime;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -32,7 +30,9 @@ public class Eventcategory {
     @Column(name = "eventCategoryDescription", length = 500)
     private String eventCategoryDescription;
 
-    @NotNull(message = "Duration is not null")
+    @NotNull(message = "Duration is not null and must between 1 - 480")
+    @Min(1)
+    @Max(480)
     @Column(name = "eventDuration", nullable = false)
     private Integer eventDuration;
 

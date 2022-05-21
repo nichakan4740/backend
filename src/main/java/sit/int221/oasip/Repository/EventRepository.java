@@ -7,4 +7,5 @@ import sit.int221.oasip.Entity.Event;
 import java.util.List;
 
 public interface EventRepository extends JpaRepository<Event, Integer> {
+
 }
