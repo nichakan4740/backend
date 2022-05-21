@@ -20,13 +20,10 @@ class EventController {
     @Autowired
     private EventService service;
 
-    @Autowired
-    private EventRepository repository;
-
     //Get all Event
     @GetMapping("")
-    public List<EventDTO> getAllEvent(){
-        return service.getAllEvent();
+    public List<EventDTO> getAllEvent(@RequestParam(defaultValue = "eventStartTime") String sortBy){
+        return service.getAllEvent(sortBy);
     }
 
     //Get Event with id

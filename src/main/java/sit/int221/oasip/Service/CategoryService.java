@@ -22,10 +22,13 @@ import java.util.List;
 public class CategoryService {
     @Autowired
     private EventCategoryRepository repository;
+
     @Autowired
     private ModelMapper modelMapper;
+
     @Autowired
     private ListMapper listMapper;
+
     //Get all Category
     public List<CategoryDTO> getAllCategory() {
         List<Eventcategory> eventcategories = repository.findAll();
@@ -39,6 +42,7 @@ public class CategoryService {
                         HttpStatus.NOT_FOUND, "Event id " + id +
                         "Does Not Exist !!!"
                 ));
+
         return modelMapper.map(eventcategory, CategoryDTO.class);
     }
 

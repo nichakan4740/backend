@@ -21,13 +21,17 @@ import java.util.List;
 public class EventService {
     @Autowired
     private EventRepository repository;
+
     @Autowired
     private ModelMapper modelMapper;
+
     @Autowired
     private ListMapper listMapper;
+
+
     //Get all Event
-    public List<EventDTO> getAllEvent() {
-        List<Event> event = repository.findAll();
+    public List<EventDTO> getAllEvent(String sortBy) {
+        List<Event> event = repository.findAll(Sort.by(sortBy));
         return listMapper.mapList(event, EventDTO.class, modelMapper);
     }
 
@@ -68,10 +72,6 @@ public class EventService {
         return repository.saveAndFlush(event);
     }
     private Event mapEvent(Event existingEvent, Event updateEvent) {
-//        existingEvent.setBookingName(updateEvent.getBookingName());
-//        existingEvent.setEventCategory(updateEvent.getEventCategory());
-//        existingEvent.setEventEmail(updateEvent.getEventEmail());
-//        existingEvent.setEventDuration(updateEvent.getEventDuration());
         existingEvent.setEventNotes(updateEvent.getEventNotes());
         existingEvent.setEventStartTime(updateEvent.getEventStartTime());
 

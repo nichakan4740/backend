@@ -36,7 +36,7 @@ public class Eventcategory {
     @Column(name = "eventDuration", nullable = false)
     private Integer eventDuration;
 
-    @JsonIgnore
+//    @JsonIgnore
     @OneToMany(mappedBy = "eventCategoryID")
     private Set<Event> event ;
 
