@@ -3,26 +3,23 @@ package sit.int221.oasip.Entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Range;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import java.time.LocalTime;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
-import org.hibernate.validator.constraints.UniqueElements;
+
 @Getter
 @Setter
 @Entity
 @Table(name = "eventcategory")
-public class Eventcategory {
+public class Categories {
     @Id
     @Column(name = "eventCategoryID", nullable = false)
     private Integer id;
 
     @NotEmpty
-    @UniqueElements
+    @UniqueElements(message = "CategoryName is not unique")
     @Size(min = 1 , max = 100 , message = "CategoryName is not empty and must between 0 - 100")
     @Column(name = "eventCategoryName", nullable = false, length = 100)
     private String eventCategoryName;
@@ -39,6 +36,6 @@ public class Eventcategory {
 
     @JsonIgnore
     @OneToMany(mappedBy = "eventCategoryID")
-    private Set<Event> event ;
+    private Set<Events> events;
 
 }

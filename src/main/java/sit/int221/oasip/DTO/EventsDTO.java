@@ -1,22 +1,18 @@
 package sit.int221.oasip.DTO;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import sit.int221.oasip.Entity.Eventcategory;
+import sit.int221.oasip.Entity.Categories;
 
-import javax.persistence.Column;
-import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.LocalTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventDTO {
+public class EventsDTO {
     private Integer id;
     private String bookingName;
     private String eventEmail;
@@ -25,5 +21,5 @@ public class EventDTO {
     private Integer eventDuration;
 
 //    @JsonIgnore
-    private Eventcategory eventCategoryID;
+    private Categories eventCategoryID;
 }

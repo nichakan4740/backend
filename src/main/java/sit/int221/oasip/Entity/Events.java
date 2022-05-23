@@ -1,6 +1,5 @@
 package sit.int221.oasip.Entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +18,7 @@ import javax.validation.constraints.Size;
 @Setter
 @Entity
 @Table(name = "event")
-public class Event {
+public class Events {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "eventID", nullable = false)
@@ -50,6 +49,6 @@ public class Event {
     //    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "eventCategoryID")
-    private Eventcategory eventCategoryID;
+    private Categories eventCategoryID;
 
 }
