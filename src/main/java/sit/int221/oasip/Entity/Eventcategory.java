@@ -11,7 +11,7 @@ import java.time.LocalTime;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
+import org.hibernate.validator.constraints.UniqueElements;
 @Getter
 @Setter
 @Entity
