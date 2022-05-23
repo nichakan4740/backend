@@ -22,6 +22,7 @@ public class Eventcategory {
     private Integer id;
 
     @NotEmpty
+    @UniqueElements
     @Size(min = 1 , max = 100 , message = "CategoryName is not empty and must between 0 - 100")
     @Column(name = "eventCategoryName", nullable = false, length = 100)
     private String eventCategoryName;
