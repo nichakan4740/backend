@@ -3,7 +3,6 @@ package sit.int221.oasip.Entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -19,7 +18,6 @@ public class Categories {
     private Integer id;
 
     @NotEmpty
-    @UniqueElements(message = "CategoryName is not unique")
     @Size(min = 1 , max = 100 , message = "CategoryName is not empty and must between 0 - 100")
     @Column(name = "eventCategoryName", nullable = false, length = 100)
     private String eventCategoryName;
