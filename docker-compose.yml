@@ -27,13 +27,13 @@ services:
     ports:
       - "3307:3307"
     environment:
-      - MYSQL_ROOT_PASSWORD=example
-      - MYSQL_DATABASE=app
+      - MYSQL_ROOT_PASSWORD=project1234
+      - MYSQL_DATABASE=telenursing
       - MYSQL_ROOT_HOST=%
       - TZ=Asia/Bangkok
     entrypoint:
       sh -c "
-        echo 'CREATE DATABASE IF NOT EXISTS app;' > /docker-entrypoint-initdb.d/init.sql;
+        echo 'CREATE DATABASE IF NOT EXISTS telenursing;' > /docker-entrypoint-initdb.d/init.sql;
         /usr/local/bin/docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
     networks:
       - app-network
