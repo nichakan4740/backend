@@ -14,21 +14,22 @@ services:
       - ./default.conf:/etc/nginx/conf.d/default.conf:ro
       - ./public/uploads/:/var/www/uploads/
     networks:
-      - app-network
+      - mysql-phpmyadmin
     depends_on:
       - db
 
   db:
     container_name: db
-    image: mariadb
+    image: mysql:5.7
     restart: always
     volumes:
       - ./data/db:/var/lib/mysql
     ports:
-      - "3307:3307"
+      - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=project1234
       - MYSQL_DATABASE=telenursing
+      - MYSQL_PASSWORD: project1234
       - MYSQL_ROOT_HOST=%
       - TZ=Asia/Bangkok
     entrypoint:
@@ -36,18 +37,18 @@ services:
         echo 'CREATE DATABASE IF NOT EXISTS telenursing;' > /docker-entrypoint-initdb.d/init.sql;
         /usr/local/bin/docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
     networks:
-      - app-network
+      - mysql-phpmyadmin
 
   pma:
-    container_name: pma
-    image: phpmyadmin/phpmyadmin
+    depends_on:
+      - db
+    image: phpmyadmin
+    restart: always
     ports:
       - "8001:80"
-    links:
-      - db:db
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: project1234
     networks:
-      - app-network
+      - mysql-phpmyadmin
 
-networks:
-  app-network:
-    driver: bridge
