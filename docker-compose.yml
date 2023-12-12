@@ -17,7 +17,6 @@ services:
       - mysql-phpmyadmin
     depends_on:
       - db
-
   db:
     container_name: db
     image: mysql:5.7
@@ -25,11 +24,11 @@ services:
     volumes:
       - ./data/db:/var/lib/mysql
     ports:
-      - "3306:3306"
+      - "3307:3307"
     environment:
-      - MYSQL_ROOT_PASSWORD=project1234
+      - MYSQL_ROOT_PASSWORD=project
       - MYSQL_DATABASE=telenursing
-      - MYSQL_PASSWORD: project1234
+      - MYSQL_PASSWORD=project
       - MYSQL_ROOT_HOST=%
       - TZ=Asia/Bangkok
     entrypoint:
@@ -48,7 +47,17 @@ services:
       - "8001:80"
     environment:
       PMA_HOST: db
-      MYSQL_ROOT_PASSWORD: project1234
+      MYSQL_ROOT_PASSWORD: project
     networks:
       - mysql-phpmyadmin
+      
+#Docker Networks
+networks:
+  mysql-phpmyadmin:
+    driver: bridge
+#Volumes
+volumes:
+  dbdata:
+    driver: local
+
 
