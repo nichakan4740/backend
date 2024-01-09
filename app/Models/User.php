@@ -23,7 +23,6 @@ class User extends Authenticatable implements ShouldQueue , JWTSubject
     protected $fillable = [
         'fname',
         'lname',
-        'dob',
         'allergic_drug',
         'my_drug',
         'idcard',
@@ -65,7 +64,7 @@ class User extends Authenticatable implements ShouldQueue , JWTSubject
     {
       return [
         'idcard'=>$this->idcard,
-        'name'=>$this->name
+        'fname'=>$this->fname
       ];
     }
 }

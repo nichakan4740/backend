@@ -20,17 +20,15 @@ use App\Http\Controllers\AuthUser;
 Route::apiResource('/mysugar', MysugarController::class);
 
 
-/* Route::post('register/admin',[AuthAdmin::class, 'registerAdmin']);
-Route::post('login/admin',[AuthAdmin::class, 'loginAdmin']); */
 
+/* ผู้ป่วย */
+Route::post('patient/register',[AuthUser::class,'register']);
+Route::post('patient/login', [AuthUser::class,'login']);
+Route::post('patient/refresh', [AuthUser::class,'refresh']);
+Route::post('patient/logout', [AuthUser::class,'logout']);
 
-Route::post('register',[AuthUser::class,'register']);
-Route::post('login', [AuthUser::class,'login']);
-Route::post('refresh', [AuthUser::class,'refresh']);
-Route::post('logout', [AuthUser::class,'logout']);
-
-
-Route::post('admin/register',[AuthUser::class,'register']);
-Route::post('admin/login', [AuthUser::class,'login']);
-Route::post('admin/refresh', [AuthUser::class,'refresh']);
-Route::post('admin/logout', [AuthUser::class,'logout']);
+/* พยาบาล */
+Route::post('nurse/register',[AuthAdmin::class,'register']);
+Route::post('nurse/login', [AuthAdmin::class,'login']);
+Route::post('nurse/refresh', [AuthAdmin::class,'refresh']);
+Route::post('nurse/logout', [AuthAdmin::class,'logout']);

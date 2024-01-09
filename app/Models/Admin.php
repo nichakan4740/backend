@@ -2,27 +2,28 @@
 
 namespace App\Models;
 
-use Illuminate\Foundation\Auth\User ;
+use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
-class Admin extends User  implements ShouldQueue , JWTSubject
+class Admin extends Authenticatable implements ShouldQueue , JWTSubject
 {
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-
-    protected $guard = 'admin';
+    protected $guard = ["api"];
 
     protected $fillable = [
-        'name',
-        'email',
+        'fname',
+        'lname',
+        'professional_license_number',
         'password',
     ];
 
@@ -33,7 +34,6 @@ class Admin extends User  implements ShouldQueue , JWTSubject
      */
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
     /**
@@ -42,23 +42,27 @@ class Admin extends User  implements ShouldQueue , JWTSubject
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
 
 
-        public function getJWTIdentifier()
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+   //put these methods at the bottom of your class body
+  
+   public function getJWTIdentifier()
     {
-        return $this->getKey(); // Assuming your admin model has a primary key called "id".
+      return $this->getKey();
     }
 
-    /**
-     * Return a key value array, containing any custom claims to be added to the JWT.
-     *
-     * @return array
-     */
     public function getJWTCustomClaims()
     {
-        return [];
+      return [
+        'professional_license_number'=>$this->professional_license_number,
+        'fname'=>$this->fname
+      ];
     }
 }
