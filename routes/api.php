@@ -16,10 +16,11 @@ use App\Http\Controllers\AuthUser;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
 Route::apiResource('/mysugar', MysugarController::class);
 
 
+Route::post('register/admin',[AuthAdmin::class, 'registerAdmin']);
+    Route::post('login/admin',[AuthAdmin::class, 'loginAdmin']);
 
 /* ผู้ป่วย */
 Route::post('patient/register',[AuthUser::class,'register']);

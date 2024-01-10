@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -11,31 +12,23 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthAdmin extends Controller
 {
-    public function __construct()
+
+    public function registerAdmin(Request $request)
     {
-        $this->middleware('auth:api', ['except' => ['login','register','refresh','logout']]);
-    }
-
-    public function register(Request $request){
-        $request->validate([
-            'fname' => 'required|string|max:255',
-            'lname' => 'required|string|max:255',
-            'professional_license_number' => 'required|string|max:10|unique:admins',
-            'password' => 'required|string|min:8',
+        $credentials = $request->only('email', 'password');
+        $request->merge(['password' => Hash::make($request->password)]);
+        $username = explode('@', $request->email)[0];
+        $user = Admin::create([
+            'name' => $username,
+            'username' => $username,
+            'email' => $request->email,
+            'password' => $request->password,
         ]);
-
-        $admin = Admin::create([
-            'fname' => $request->fname,
-            'lname' => $request->lname,
-            'professional_license_number' => $request->professional_license_number,
-            'password' => Hash::make($request->password),
-        ]);
-
-        $token = Auth::guard('api')->login($admin);
-        return response()->json([
+        $token = Auth::guard('admin')->login($user);
+        return  response()->json([
             'status' => 'success',
             'message' => 'User created successfully',
-            'admin' => $admin,
+            'user' => $user,
             'authorisation' => [
             'token' => $token,
             'type' => 'bearer',
@@ -45,16 +38,29 @@ class AuthAdmin extends Controller
 
 
 
+    public function loginAdmin(Request $request)
+    /* {
+        $credentials = $request->only('email', 'password');
+        try {
+            if (!$token = auth()->guard('admin')->attempt($credentials)) {
+                return response()->json(['success' => false, 'error' => 'Some Error Message'], 401);
+            }
+        } catch (JWTException $e) {
+            return response()->json(['success' => false, 'error' => 'Failed to login, please try again.'], 500);
+        }
+        return $this->finalResponse($token);
+    } */
 
-    public function login(Request $request)
     {
         $request->validate([
-            'professional_license_number' => 'required|string',
+            'email' => 'required|string',
             'password' => 'required|string',
         ]);
-        $credentials = $request->only('professional_license_number', 'password');
 
-        $token = Auth::guard('api')->attempt($credentials);
+        
+        $credentials = $request->only('email', 'password');
+
+        $token = Auth::guard('admin')->attempt($credentials);
         if (!$token) {
             return response()->json([
                 'status' => 'error',
@@ -62,10 +68,10 @@ class AuthAdmin extends Controller
             ], 401);
         }
 
-        $admin = Auth::guard('api')->user();
+        $user = Auth::guard('admin')->user();
         return response()->json([
                 'status' => 'success',
-                'admin' => $admin,
+                'user' => $user,
                 'authorisation' => [
                 'token' => $token,
                 'type' => 'bearer',
@@ -75,29 +81,4 @@ class AuthAdmin extends Controller
     }
 
 
-
-    public function logout()
-    {
-        Auth::guard('api')->logout();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Successfully logged out',
-        ]);
-    }
-
-
-    public function refresh()
-    {
-        return response()->json([
-            'status' => 'success',
-            'admin' => Auth::guard('api')->admin(),
-            'authorisation' => [
-                'token' => Auth::guard('api')->refresh(),
-                'type' => 'bearer',
-            ]
-        ]);
-    }
-
-
-    
 }

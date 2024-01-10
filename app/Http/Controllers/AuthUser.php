@@ -56,6 +56,8 @@ class AuthUser extends Controller
             'idcard' => 'required|string',
             'password' => 'required|string',
         ]);
+
+        
         $credentials = $request->only('idcard', 'password');
 
         $token = Auth::guard('api')->attempt($credentials);
@@ -77,6 +79,10 @@ class AuthUser extends Controller
             ]);
 
     }
+
+
+
+
 
 
 

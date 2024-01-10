@@ -2,28 +2,27 @@
 
 namespace App\Models;
 
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Foundation\Auth\User ;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Database\Eloquent\Model;
-class Admin extends Authenticatable implements ShouldQueue , JWTSubject
-{
-    use HasApiTokens, HasFactory, Notifiable;
 
+class Admin extends User  implements ShouldQueue , JWTSubject
+{
+    use HasFactory, Notifiable;
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    protected $guard = ["api"];
+
+    protected $guard = 'admin';
 
     protected $fillable = [
-        'fname',
-        'lname',
-        'professional_license_number',
+        'name',
+        'email',
         'password',
     ];
 
@@ -34,6 +33,7 @@ class Admin extends Authenticatable implements ShouldQueue , JWTSubject
      */
     protected $hidden = [
         'password',
+        'remember_token',
     ];
 
     /**
@@ -42,27 +42,23 @@ class Admin extends Authenticatable implements ShouldQueue , JWTSubject
      * @var array<string, string>
      */
     protected $casts = [
+        'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
 
 
-    /**
-     * Get the identifier that will be stored in the subject claim of the JWT.
-     *
-     * @return mixed
-     */
-   //put these methods at the bottom of your class body
-  
-   public function getJWTIdentifier()
+        public function getJWTIdentifier()
     {
-      return $this->getKey();
+        return $this->getKey(); // Assuming your admin model has a primary key called "id".
     }
 
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
     public function getJWTCustomClaims()
     {
-      return [
-        'professional_license_number'=>$this->professional_license_number,
-        'fname'=>$this->fname
-      ];
+        return [];
     }
 }
