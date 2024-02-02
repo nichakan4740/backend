@@ -13,15 +13,29 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 class AuthAdmin extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['loginAdmin','registerAdmin','logoutAdmin']]);
+    }
+
+
+
+
     public function registerAdmin(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('professional_id', 'password');
         $request->merge(['password' => Hash::make($request->password)]);
-        $username = explode('@', $request->email)[0];
+        $request->validate([
+            'professional_id' => 'required|string|max:11|unique:admins',
+            'password' => 'required|string|min:8',
+            'name' => 'required|string|max:500',
+        ]);
+        
+        
         $user = Admin::create([
-            'name' => $username,
-            'username' => $username,
-            'email' => $request->email,
+
+            'name' => $request->name,
+            'professional_id' => $request->professional_id,
             'password' => $request->password,
         ]);
         $token = Auth::guard('admin')->login($user);
@@ -36,29 +50,15 @@ class AuthAdmin extends Controller
         ]);
     }
 
-
-
     public function loginAdmin(Request $request)
-    /* {
-        $credentials = $request->only('email', 'password');
-        try {
-            if (!$token = auth()->guard('admin')->attempt($credentials)) {
-                return response()->json(['success' => false, 'error' => 'Some Error Message'], 401);
-            }
-        } catch (JWTException $e) {
-            return response()->json(['success' => false, 'error' => 'Failed to login, please try again.'], 500);
-        }
-        return $this->finalResponse($token);
-    } */
-
     {
         $request->validate([
-            'email' => 'required|string',
+            'professional_id' => 'required|string',
             'password' => 'required|string',
         ]);
 
         
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('professional_id', 'password');
 
         $token = Auth::guard('admin')->attempt($credentials);
         if (!$token) {
@@ -80,5 +80,15 @@ class AuthAdmin extends Controller
 
     }
 
+
+
+    public function logoutAdmin()
+    {
+        Auth::guard('admin')->logoutAdmin();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Successfully logged out',
+        ]);
+    }
 
 }

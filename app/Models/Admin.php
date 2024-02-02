@@ -22,7 +22,7 @@ class Admin extends User  implements ShouldQueue , JWTSubject
 
     protected $fillable = [
         'name',
-        'email',
+        'professional_id',
         'password',
     ];
 
@@ -42,7 +42,6 @@ class Admin extends User  implements ShouldQueue , JWTSubject
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
 

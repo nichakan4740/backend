@@ -18,8 +18,7 @@ use App\Http\Controllers\TestAuth;
 */
 
 
-    Route::post('register/admin',[AuthAdmin::class, 'registerAdmin']);
-    Route::post('login/admin',[AuthAdmin::class, 'loginAdmin']);
+ 
 
 
     Route::middleware(['auth:admin'])->group(function () {
