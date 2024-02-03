@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('sugarValue');
             $table->char('symptom',100);
             $table->char('note',100);
-           /*  $table->integer('patientIdNumber'); */
+            $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
     }

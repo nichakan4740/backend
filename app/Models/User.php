@@ -9,6 +9,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+
 class User extends Authenticatable implements ShouldQueue , JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -67,4 +70,14 @@ class User extends Authenticatable implements ShouldQueue , JWTSubject
         'fname'=>$this->fname
       ];
     }
+
+
+    /* เพิ่มการเชื่อมตาราง one to many */
+    public function mysugar(): HasMany
+    {
+        return $this->hasMany(Mysugar::class);
+    }
+
+
+
 }
