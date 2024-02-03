@@ -81,10 +81,9 @@ class AuthAdmin extends Controller
     }
 
 
-
     public function logoutAdmin()
     {
-        Auth::guard('admin')->logoutAdmin();
+        Auth::guard('admin')->logout();
         return response()->json([
             'status' => 'success',
             'message' => 'Successfully logged out',
