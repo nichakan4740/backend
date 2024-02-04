@@ -50,7 +50,7 @@ class AuthAdmin extends Controller
         ]);
     }
 
-    public function loginAdmin(Request $request)
+  /*   public function loginAdmin(Request $request)
     {
         $request->validate([
             'professional_id' => 'required|string',
@@ -64,7 +64,7 @@ class AuthAdmin extends Controller
         if (!$token) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Unauthorized',
+                'message' => 'Incorrect password!',
             ], 401);
         }
 
@@ -79,6 +79,47 @@ class AuthAdmin extends Controller
             ]);
 
     }
+ */
+
+public function loginAdmin(Request $request)
+{
+    $request->validate([
+        'professional_id' => 'required|string',
+        'password' => 'required|string',
+    ]);
+
+    $credentials = $request->only('professional_id', 'password');
+
+    $token = Auth::guard('admin')->attempt($credentials);
+    
+    if (!$token) {
+        $user = Admin::where('professional_id', $request->professional_id)->first();
+
+        if (!$user) {
+            // User not found (404)
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User not found.',
+            ], 404);
+        }
+
+        // Incorrect password (401)
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Incorrect password!',
+        ], 401);
+    }
+
+    $user = Auth::guard('admin')->user();
+    return response()->json([
+        'status' => 'success',
+        'user' => $user,
+        'authorisation' => [
+            'token' => $token,
+            'type' => 'bearer',
+        ]
+    ]);
+}
 
 
     public function logoutAdmin()

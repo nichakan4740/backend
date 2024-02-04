@@ -49,7 +49,7 @@ class AuthUser extends Controller
 
 
 
-
+/* 
     public function login(Request $request)
     {
         $request->validate([
@@ -64,7 +64,7 @@ class AuthUser extends Controller
         if (!$token) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Unauthorized',
+                'message' => '',
             ], 401);
         }
 
@@ -79,12 +79,50 @@ class AuthUser extends Controller
             ]);
 
     }
+ */
 
+public function login(Request $request)
+{
+    $request->validate([
+        'idcard' => 'required|string',
+        'password' => 'required|string',
+    ]);
 
+    $credentials = $request->only('idcard', 'password');
 
+    $user = User::where('idcard', $credentials['idcard'])->first();
 
+    if (!$user) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'User not found',
+        ], 404);
+    }
 
+    if (!Hash::check($credentials['password'], $user->password)) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Incorrect password!',
+        ], 401);
+    }
 
+    $token = Auth::guard('api')->attempt($credentials);
+    if (!$token) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Unauthorized',
+        ], 401);
+    }
+
+    return response()->json([
+        'status' => 'success',
+        'user' => $user,
+        'authorisation' => [
+            'token' => $token,
+            'type' => 'bearer',
+        ]
+    ]);
+}
 
     public function logout()
     {
