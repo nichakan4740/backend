@@ -12,7 +12,8 @@ class Mysugar extends Model
     protected $fillable = [    
         'sugarValue',
         'symptom',
-        'note'
+        'note',
+        'user_id'
        /*  'patientIdNumber' */
     ];
 
