@@ -31,10 +31,26 @@ class MysugarController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+ /*    public function show(string $id)
     {
         $mysugar = $this->mysugar->find($id);
+    } */
+
+    /* เพิ่มแสดงแสดงข้อมูลตาม id user */
+    public function show(string $id)
+{
+    $mysugar = $this->mysugar->where('user_id', $id)->get();
+    if ($mysugar->isEmpty()) {
+        return response()->json(['message' => 'Mysugar not found'], 404);
     }
+    return $mysugar;
+}
+
+
+
+
+
+
 
     /**
      * Update the specified resource in storage.

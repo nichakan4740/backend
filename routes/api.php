@@ -18,6 +18,8 @@ use App\Http\Controllers\AuthUser;
 */
 Route::apiResource('/mysugar', MysugarController::class);
 
+Route::get('mysugars/{id}', [MysugarController::class, 'show']);
+
 /* พยาบาล */
 Route::post('nurse/register',[AuthAdmin::class, 'registerAdmin']);
 Route::post('nurse/login',[AuthAdmin::class, 'loginAdmin']);
