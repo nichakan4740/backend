@@ -4,57 +4,65 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Mysugar;
- 
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Validator;
 
 class MysugarController extends Controller
 {
     protected $mysugar;
-    public function __construct(){
+
+    public function __construct()
+    {
         $this->mysugar = new Mysugar();
     }
-    /**
-     * Display a listing of the resource.
-     */
+
+    /*** Display a listing of the resource.*/
     public function index()
     {
-        return $this->mysugar->all();
+        $data = $this->mysugar->all();
+        if ($data->isEmpty()) {
+            return response()->json(['message' => 'ไม่มีข้อมูล'], 200);
+        }
+        return $data;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+
+    /** * Store a newly created resource in storage. */
+/*   public function store(Request $request)
     {
         return $this->mysugar->create($request->all());
     }
-
-    /**
-     * Display the specified resource.
-     */
- /*    public function show(string $id)
-    {
-        $mysugar = $this->mysugar->find($id);
-    } */
-
-    /* เพิ่มแสดงแสดงข้อมูลตาม id user */
-    public function show(string $id)
+  */
+  public function store(Request $request)
 {
-    $mysugar = $this->mysugar->where('user_id', $id)->get();
-    if ($mysugar->isEmpty()) {
-        return response()->json(['message' => 'Mysugar not found'], 404);
+    // กำหนดเงื่อนไขในการ validate ข้อมูลก่อนการสร้าง
+    $validator = Validator::make($request->all(), [
+        'sugarValue' => 'required|numeric',
+        'user_id' => 'required',
+        'symptom' => 'nullable',
+        'note' => 'nullable',
+    ]);
+
+    // ตรวจสอบว่าข้อมูลที่ส่งเข้ามาถูกต้องตามเงื่อนไขหรือไม่
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 400);
     }
-    return $mysugar;
+
+    // สร้าง Mysugar โดยใช้ข้อมูลที่ส่งเข้ามา
+    return $this->mysugar->create($request->all());
 }
 
+    /** * Display ตาม id */
+    public function show(string $id)
+    {
+        $mysugar = $this->mysugar->where('user_id', $id)->get();
+        if ($mysugar->isEmpty()) {
+            return response()->json(['message' => 'Mysugar not found'], 404);
+        }
+        return $mysugar;
+    }
 
-
-
-
-
-
-    /**
-     * Update the specified resource in storage.
-     */
+    /** * Update the specified resource in storage. */
     public function update(Request $request, string $id)
     {
         $mysugar = $this-> mysugar->find($id);
@@ -62,12 +70,14 @@ class MysugarController extends Controller
         return  $mysugar;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    /** * Remove the specified resource from storage. */
     public function destroy(string $id)
     {
         $mysugar = $this->mysugar->find($id);
-        return  $mysugar->delete();
+        if (!$mysugar) {
+            throw ValidationException::withMessages(['message' => 'Mysugar not found']);
+        }
+        $mysugar->delete();
+        return response()->json(['message' => 'Mysugar deleted successfully']);
     }
 }

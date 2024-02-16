@@ -47,40 +47,6 @@ class AuthUser extends Controller
         ]);
     }
 
-
-
-/* 
-    public function login(Request $request)
-    {
-        $request->validate([
-            'idcard' => 'required|string',
-            'password' => 'required|string',
-        ]);
-
-        
-        $credentials = $request->only('idcard', 'password');
-
-        $token = Auth::guard('api')->attempt($credentials);
-        if (!$token) {
-            return response()->json([
-                'status' => 'error',
-                'message' => '',
-            ], 401);
-        }
-
-        $user = Auth::guard('api')->user();
-        return response()->json([
-                'status' => 'success',
-                'user' => $user,
-                'authorisation' => [
-                'token' => $token,
-                'type' => 'bearer',
-                ]
-            ]);
-
-    }
- */
-
 public function login(Request $request)
 {
     $request->validate([
@@ -147,5 +113,64 @@ public function login(Request $request)
     }
 
 
+ /* ----------------------------------------------------------------------------------------- */
     
+ public function getProfile(Request $request)
+ {
+     $user = $request->user();
+ 
+     return response()->json([
+         'status' => 'success',
+         'user' => $user,
+     ]);
+ }
+ 
+ public function updateProfile(Request $request)
+ {
+     $user = $request->user();
+ 
+     $request->validate([
+         'fname' => 'required|string|max:255',
+         'lname' => 'required|string|max:255',
+         'allergic_drug' => 'required|string|max:500',
+         'my_drug' => 'required|string|max:500',
+         'idcard' => 'required|string|max:13|unique:users',
+     ]);
+ 
+     $user->update([
+         'fname' => $request->fname,
+         'lname' => $request->lname,
+         'allergic_drug' => $request->allergic_drug,
+         'my_drug' => $request->my_drug,
+         'idcard' => $request->idcard,
+     ]);
+ 
+     return response()->json([
+         'status' => 'success',
+         'message' => 'Profile updated successfully',
+         'user' => $user,
+     ]);
+ }
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

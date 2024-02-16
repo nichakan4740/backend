@@ -33,4 +33,7 @@ Route::post('patient/login', [AuthUser::class,'login']);
 Route::post('patient/refresh', [AuthUser::class,'refresh']);
 Route::post('patient/logout', [AuthUser::class,'logout']);
 
+Route::get('patient/getProfile', [AuthUser::class,'getProfile']);
+Route::put('patient/updateProfile', [AuthUser::class,'updateProfile']);
+
 

@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('mysugars', function (Blueprint $table) {
             $table->id();
             $table->integer('sugarValue');
-            $table->char('symptom',100);
-            $table->char('note',100);
+            $table->char('symptom',100)->nullable(); // กำหนดให้เป็นค่า null ได้
+            $table->char('note',100)->nullable(); // กำหนดให้เป็นค่า null ได้
             $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
