@@ -113,64 +113,26 @@ public function login(Request $request)
     }
 
 
- /* ----------------------------------------------------------------------------------------- */
-    
- public function getProfile(Request $request)
- {
-     $user = $request->user();
- 
-     return response()->json([
-         'status' => 'success',
-         'user' => $user,
-     ]);
- }
- 
- public function updateProfile(Request $request)
- {
-     $user = $request->user();
- 
-     $request->validate([
-         'fname' => 'required|string|max:255',
-         'lname' => 'required|string|max:255',
-         'allergic_drug' => 'required|string|max:500',
-         'my_drug' => 'required|string|max:500',
-         'idcard' => 'required|string|max:13|unique:users',
-     ]);
- 
-     $user->update([
-         'fname' => $request->fname,
-         'lname' => $request->lname,
-         'allergic_drug' => $request->allergic_drug,
-         'my_drug' => $request->my_drug,
-         'idcard' => $request->idcard,
-     ]);
- 
-     return response()->json([
-         'status' => 'success',
-         'message' => 'Profile updated successfully',
-         'user' => $user,
-     ]);
- }
- 
+    /* ------------------------------------------------------ */
+    public function getProfile(Request $request)
+    {
+        $user = $request->user();
+        return response()->json([
+            'status' => 'success',
+            'user' => $user,
+        ]);
+    }
 
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+        $user->update($request->all());
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Profile updated successfully',
+            'user' => $user,
+        ]);
+    }
 
 }

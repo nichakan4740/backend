@@ -12,13 +12,10 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthAdmin extends Controller
 {
-
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['loginAdmin','registerAdmin','logoutAdmin']]);
+        $this->middleware('auth:admin', ['except' => ['loginAdmin','registerAdmin','logoutAdmin']]);
     }
-
-
 
 
     public function registerAdmin(Request $request)
@@ -49,37 +46,6 @@ class AuthAdmin extends Controller
             ]
         ]);
     }
-
-  /*   public function loginAdmin(Request $request)
-    {
-        $request->validate([
-            'professional_id' => 'required|string',
-            'password' => 'required|string',
-        ]);
-
-        
-        $credentials = $request->only('professional_id', 'password');
-
-        $token = Auth::guard('admin')->attempt($credentials);
-        if (!$token) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Incorrect password!',
-            ], 401);
-        }
-
-        $user = Auth::guard('admin')->user();
-        return response()->json([
-                'status' => 'success',
-                'user' => $user,
-                'authorisation' => [
-                'token' => $token,
-                'type' => 'bearer',
-                ]
-            ]);
-
-    }
- */
 
 public function loginAdmin(Request $request)
 {
@@ -131,4 +97,46 @@ public function loginAdmin(Request $request)
         ]);
     }
 
+
+
+
+    /* ----------------------------------------------------------------------------------------- */
+   
+/* public function getProfile(Request $request)
+{
+    $user = $request->user();
+
+    return response()->json([
+        'status' => 'success',
+        'user' => $user,
+    ]);
+}
+
+public function updateProfile(Request $request)
+{
+    $user = $request->user();
+
+    $request->validate([
+        'fname' => 'required|string|max:255',
+        'lname' => 'required|string|max:255',
+        'allergic_drug' => 'required|string|max:500',
+        'my_drug' => 'required|string|max:500',
+        'idcard' => 'required|string|max:13|unique:users,idcard,'.$user->id,
+    ]);
+
+    $user->update([
+        'fname' => $request->fname,
+        'lname' => $request->lname,
+        'allergic_drug' => $request->allergic_drug,
+        'my_drug' => $request->my_drug,
+        'idcard' => $request->idcard,
+    ]);
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Profile updated successfully',
+        'user' => $user,
+    ]);
+} */
+    
 }
