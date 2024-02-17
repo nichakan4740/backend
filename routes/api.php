@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\MysugarController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthAdmin;
 use App\Http\Controllers\AuthUser;
 /*
@@ -17,7 +18,6 @@ use App\Http\Controllers\AuthUser;
 |
 */
 Route::apiResource('/mysugar', MysugarController::class);
-
 Route::get('mysugars/{id}', [MysugarController::class, 'show']);
 
 /* พยาบาล */
@@ -33,7 +33,13 @@ Route::post('patient/login', [AuthUser::class,'login']);
 Route::post('patient/refresh', [AuthUser::class,'refresh']);
 Route::post('patient/logout', [AuthUser::class,'logout']);
 
-Route::get('patient/getProfile', [AuthUser::class,'getProfile']);
-Route::put('patient/updateProfile', [AuthUser::class,'updateProfile']);
+
+
+/* get รายละเอียดผู้ป่วย  */
+Route::get('patient/getProfile', [UserController::class,'indexuser']);
+Route::get('patient/getProfile/{id}', [UserController::class,'showuserwithid']);
+Route::delete('patient/getProfile/{id}', [UserController::class, 'destroyuser']);
+Route::put('patient/getProfile/{id}', [UserController::class, 'updateuser']);
+
 
 

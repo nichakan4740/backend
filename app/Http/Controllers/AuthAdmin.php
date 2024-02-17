@@ -23,7 +23,7 @@ class AuthAdmin extends Controller
         $credentials = $request->only('professional_id', 'password');
         $request->merge(['password' => Hash::make($request->password)]);
         $request->validate([
-            'professional_id' => 'required|string|max:11|unique:admins',
+            'professional_id' => 'required|string|max:10|unique:admins',
             'password' => 'required|string|min:8',
             'name' => 'required|string|max:500',
         ]);
