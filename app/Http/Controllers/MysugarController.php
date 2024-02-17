@@ -20,7 +20,7 @@ class MysugarController extends Controller
     public function index()
     {
         $data = $this->mysugar->with(['user' => function ($query) {
-                                     $query->select('id', 'fname', 'lname');
+                                     $query->select('id', 'fname', 'lname','allergic_drug','my_drug','idcard');
                                  }])
                                ->get();
     
@@ -32,8 +32,6 @@ class MysugarController extends Controller
     }
     
 
-
-  
   public function store(Request $request)
 {
     // กำหนดเงื่อนไขในการ validate ข้อมูลก่อนการสร้าง
