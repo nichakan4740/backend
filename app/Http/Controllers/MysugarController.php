@@ -19,20 +19,21 @@ class MysugarController extends Controller
     /*** Display a listing of the resource.*/
     public function index()
     {
-        $data = $this->mysugar->all();
+        $data = $this->mysugar->with(['user' => function ($query) {
+                                     $query->select('id', 'fname', 'lname');
+                                 }])
+                               ->get();
+    
         if ($data->isEmpty()) {
             return response()->json(['message' => 'ไม่มีข้อมูล'], 200);
         }
+    
         return $data;
     }
+    
 
 
-    /** * Store a newly created resource in storage. */
-/*   public function store(Request $request)
-    {
-        return $this->mysugar->create($request->all());
-    }
-  */
+  
   public function store(Request $request)
 {
     // กำหนดเงื่อนไขในการ validate ข้อมูลก่อนการสร้าง
@@ -61,6 +62,7 @@ class MysugarController extends Controller
         }
         return $mysugar;
     }
+    
 
     /** * Update the specified resource in storage. */
     public function update(Request $request, string $id)
