@@ -16,6 +16,7 @@ class MysugarController extends Controller
         $this->mysugar = new Mysugar();
     }
 
+    
     /*** Display a listing of the resource.*/
     public function index()
     {
@@ -51,6 +52,9 @@ class MysugarController extends Controller
     return $this->mysugar->create($request->all());
 }
 
+
+
+
     /** * Display ตาม id */
     public function show(string $id)
     {
@@ -60,6 +64,8 @@ class MysugarController extends Controller
         }
         return $mysugar;
     }
+    
+
     
 
     /** * Update the specified resource in storage. */

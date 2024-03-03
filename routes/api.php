@@ -7,6 +7,7 @@ use App\Http\Controllers\MysugarController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthAdmin;
 use App\Http\Controllers\AuthUser;
+use App\Http\Controllers\DrugInformationController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -32,6 +33,17 @@ Route::post('patient/register',[AuthUser::class,'register']);
 Route::post('patient/login', [AuthUser::class,'login']);
 Route::post('patient/refresh', [AuthUser::class,'refresh']);
 Route::post('patient/logout', [AuthUser::class,'logout']);
+
+
+/* ข้อมูลยา */
+Route::get('drug/{id}', [DrugInformationController::class,'showDrug']);
+Route::post('drug', [DrugInformationController::class,'createDrug']);
+Route::put('drug/{id}', [DrugInformationController::class,'updateDrug']);
+
+
+
+
+
 
 
 

@@ -17,6 +17,8 @@ class Mysugar extends Model
        /*  'patientIdNumber' */
     ];
 
+
+    
      /* เพิ่มการเชื่อมตาราง one to many */
      public function user()
     {

@@ -79,5 +79,12 @@ class User extends Authenticatable implements ShouldQueue , JWTSubject
     }
 
 
+    
+    public function drugInformatiom()
+    {
+        return $this->hasOne(DrugInformation ::class);
+    }
+
+
 
 }
