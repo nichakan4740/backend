@@ -60,4 +60,21 @@ class Admin extends User  implements ShouldQueue , JWTSubject
     {
         return [];
     }
+
+
+    /* ----------------------------------------------------------- */
+       
+   /* ผู้เข้าร่วมกลุ่ม */  
+   public function group_member()
+   {
+       return $this->belongsToMany('App\Models\Group', 'group_participants', 'admin_id', 'group_id')->orderBy('updated_at', 'desc');
+   }
+
+
+
+    /* ข้อความที่ส่งหากัน */
+    public function message()
+    {
+        return $this->hasMany('App\Models\Message','admin_id');
+    }
 }

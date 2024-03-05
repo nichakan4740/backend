@@ -86,5 +86,20 @@ class User extends Authenticatable implements ShouldQueue , JWTSubject
     }
 
 
+    /* ผู้เข้าร่วมกลุ่ม */  
+   public function group_member()
+   {
+       return $this->belongsToMany('App\Models\Group', 'group_participants', 'user_id', 'group_id')->orderBy('updated_at', 'desc');
+   }
+
+
+
+    /* ข้อความที่ส่งหากัน */
+    public function message()
+    {
+        return $this->hasMany('App\Models\Message','user_id');
+    }
+
+
 
 }
