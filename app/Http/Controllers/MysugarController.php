@@ -55,6 +55,10 @@ class MysugarController extends Controller
 
 
 
+
+
+
+
     /** * Display ตาม id */
     public function show(string $id)
     {

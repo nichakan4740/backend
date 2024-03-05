@@ -85,6 +85,7 @@ class User extends Authenticatable implements ShouldQueue , JWTSubject
         return $this->hasOne(DrugInformation ::class);
     }
 
+/* ------------------------------------------------------------------------------------------------------------------------------ */
 
     /* ผู้เข้าร่วมกลุ่ม */  
    public function group_member()
@@ -93,13 +94,10 @@ class User extends Authenticatable implements ShouldQueue , JWTSubject
    }
 
 
-
     /* ข้อความที่ส่งหากัน */
     public function message()
     {
         return $this->hasMany('App\Models\Message','user_id');
     }
-
-
 
 }

@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 
 class MasterAdmins extends Authenticatable
 {
+ 
     use HasFactory, Notifiable;
 
     /**

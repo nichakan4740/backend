@@ -8,6 +8,12 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthAdmin;
 use App\Http\Controllers\AuthUser;
 use App\Http\Controllers\DrugInformationController;
+
+
+
+use App\Http\Controllers\GroupController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MessageController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -41,17 +47,44 @@ Route::post('drug', [DrugInformationController::class,'createDrug']);
 Route::put('drug/{id}', [DrugInformationController::class,'updateDrug']);
 
 
-
-
-
-
-
-
 /* get รายละเอียดผู้ป่วย  */
 Route::get('patient/getProfile', [UserController::class,'indexuser']);
 Route::get('patient/getProfile/{id}', [UserController::class,'showuserwithid']);
 Route::delete('patient/getProfile/{id}', [UserController::class, 'destroyuser']);
 Route::put('patient/getProfile/{id}', [UserController::class, 'updateuser']);
+
+
+
+/* chat */
+Route::get('/homechat', [HomeController::class, 'index']);
+
+Auth::routes();
+
+Route::get('/group/create', [GroupController::class, 'create_form']);
+
+Route::post('/group/create', [GroupController::class ,'create']);
+
+Route::get('/group/join', [GroupController::class , 'join_form']);
+
+Route::post('/group/join', [GroupController::class,  'join']);
+
+Route::get('/group/{id}', [GroupController::class, 'show_group']);
+
+Route::get('/group/edit/{id}', [GroupController::class, 'edit']);
+
+Route::post('/group/update/{id}', [GroupController::class, 'update']);
+
+Route::delete('/group/delete/{id}', [GroupController::class, 'delete']);
+
+Route::get('/group/members_list/{id}', [GroupController::class, 'members_list']);
+
+Route::get('/remove_user/{id}/{user_id}', [GroupController::class, 'remove_user']);
+
+Route::post('/send_message/{id}', [MessageController::class, 'send_message']);
+
+Route::get('/show_messages/{id}', [MessageController::class, 'show_messages']);
+
+
 
 
 
