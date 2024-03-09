@@ -14,6 +14,7 @@ use App\Http\Controllers\DrugInformationController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\ConversationController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -60,7 +61,7 @@ Route::get('/homechat', [HomeController::class, 'index']);
 
 Auth::routes();
 
-Route::get('/group/create', [GroupController::class, 'create_form']);
+/* Route::get('/group/create', [GroupController::class, 'create_form']);
 
 Route::post('/group/create', [GroupController::class ,'create']);
 
@@ -82,7 +83,22 @@ Route::get('/remove_user/{id}/{user_id}', [GroupController::class, 'remove_user'
 
 Route::post('/send_message/{id}', [MessageController::class, 'send_message']);
 
-Route::get('/show_messages/{id}', [MessageController::class, 'show_messages']);
+Route::get('/show_messages/{id}', [MessageController::class, 'show_messages']); */
+
+
+
+
+
+
+/* เพิ่ม */
+
+    # routes/web.php
+/*     Route::resource('groups', 'GroupController'); */
+    Route::apiResource('/groups', GroupController::class);
+
+    Route::apiResource('/conversations', ConversationController::class);
+ 
+
 
 
 
