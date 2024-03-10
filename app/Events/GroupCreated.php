@@ -14,12 +14,16 @@ class GroupCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $adminId; // เพิ่ม property สำหรับเก็บ id ของ admin
+
     /**
      * Create a new event instance.
+     *
+     * @param int $adminId
      */
-    public function __construct()
+    public function __construct($adminId)
     {
-        //
+        $this->adminId = $adminId; // กำหนดค่า id ของ admin
     }
 
     /**
@@ -31,12 +35,14 @@ class GroupCreated
     {
         $channels = [];
 
+        // ใส่ id ของ admin เข้าไปใน channels
+        array_push($channels, new PrivateChannel('users.' . $this->adminId));
+
+        // ใส่ id ของผู้ใช้ในกลุ่มเข้าไปใน channels
         foreach ($this->group->users as $user) {
             array_push($channels, new PrivateChannel('users.' . $user->id));
         }
 
         return $channels;
     }
-
-
 }
