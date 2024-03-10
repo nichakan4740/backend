@@ -19,8 +19,8 @@ class AuthUser extends Controller
         $request->validate([
             'fname' => 'required|string|max:255',
             'lname' => 'required|string|max:255',
-            'allergic_drug' => 'required|string|max:500',
-            'my_drug' => 'required|string|max:500',
+            // 'allergic_drug' => 'required|string|max:500',
+            // 'my_drug' => 'required|string|max:500',
             'idcard' => 'required|string|max:13|unique:users',
             'password' => 'required|string|min:8',
         ]);
@@ -28,8 +28,8 @@ class AuthUser extends Controller
         $user = User::create([
             'fname' => $request->fname,
             'lname' => $request->lname,
-            'allergic_drug' => $request->allergic_drug,
-            'my_drug' => $request->my_drug,
+            // 'allergic_drug' => $request->allergic_drug,
+            // 'my_drug' => $request->my_drug,
             'idcard' => $request->idcard,
             'password' => Hash::make($request->password),
         ]);

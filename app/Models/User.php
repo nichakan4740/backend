@@ -26,8 +26,8 @@ class User extends Authenticatable implements ShouldQueue , JWTSubject
     protected $fillable = [
         'fname',
         'lname',
-        'allergic_drug',
-        'my_drug',
+        // 'allergic_drug',
+        // 'my_drug',
         'idcard',
         'password',
     ];

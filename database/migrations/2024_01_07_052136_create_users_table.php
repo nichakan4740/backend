@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('fname');
             $table->string('lname');
-            $table->string('allergic_drug');
-            $table->string('my_drug');
+            // $table->string('allergic_drug');
+            // $table->string('my_drug');
             $table->string('idcard')->unique();
             $table->string('password');
             $table->timestamps();
