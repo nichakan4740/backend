@@ -16,6 +16,7 @@
                 $table->increments('id');
                 $table->text('message')->nullable();
                 $table->unsignedInteger('user_id');
+                $table->unsignedInteger('admin_id');
                 $table->unsignedInteger('group_id');
                 $table->timestamps();
             });

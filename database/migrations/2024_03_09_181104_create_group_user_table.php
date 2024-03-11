@@ -17,7 +17,7 @@ class CreateGroupUserTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('group_id');
             $table->unsignedInteger('user_id');
-            $table->unsignedBigInteger('admin_id'); // กำหนดค่าเริ่มต้น
+            $table->unsignedBigInteger('admin_id'); 
             $table->timestamps();
         });
     }
