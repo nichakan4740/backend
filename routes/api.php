@@ -15,6 +15,12 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ConversationController;
+
+
+
+use App\Http\Controllers\AdminController;
+
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -42,10 +48,15 @@ Route::post('patient/refresh', [AuthUser::class,'refresh']);
 Route::post('patient/logout', [AuthUser::class,'logout']);
 
 
+
+
 /* ข้อมูลยา */
 Route::get('drug/{id}', [DrugInformationController::class,'showDrug']);
 Route::post('drug', [DrugInformationController::class,'createDrug']);
 Route::put('drug/{id}', [DrugInformationController::class,'updateDrug']);
+
+
+
 
 
 /* get รายละเอียดผู้ป่วย  */
@@ -53,6 +64,15 @@ Route::get('patient/getProfile', [UserController::class,'indexuser']);
 Route::get('patient/getProfile/{id}', [UserController::class,'showuserwithid']);
 Route::delete('patient/getProfile/{id}', [UserController::class, 'destroyuser']);
 Route::put('patient/getProfile/{id}', [UserController::class, 'updateuser']);
+
+
+/* get รายละเอียดพยาบาล */
+Route::get('nurse/getProfile', [AdminController::class,'indexuser']);
+Route::get('nurse/getProfile/{id}', [AdminController::class,'showuserwithid']);
+Route::delete('nurse/getProfile/{id}', [AdminController::class, 'destroyuser']);
+Route::put('nurse/getProfile/{id}', [AdminController::class, 'updateuser']);
+
+
 
 
 
