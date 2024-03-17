@@ -26,4 +26,39 @@ class ConversationController extends Controller
     
         return $conversation;
     }
+
+
+    /* ตอบกลับ */
+    public function reply(Request $request, Conversation $conversation)
+{
+    // รับ ID ของผู้ใช้หรือ admin ที่ตอบกลับ
+    $userId = $request->input('user_id');
+    $adminId = $request->input('admin_id');
+
+    // สร้างข้อความตอบกลับ
+    $reply = Conversation::create([
+        'message' => $request->input('message'),
+        'group_id' => $conversation->group_id,
+        'user_id' => $userId,
+        'admin_id' => $adminId,
+        'parent_id' => $conversation->id, // เพิ่ม parent_id เพื่อระบุว่าเป็นการตอบกลับข้อความแชทเดิม
+    ]);
+
+    // โหลดข้อมูลผู้ใช้ที่ส่งข้อความ
+    if ($userId) {
+        $reply->load('user');
+    } elseif ($adminId) {
+        $reply->load('admin');
+    }
+
+    // ส่งอีเวนต์ให้กับผู้ใช้อื่น
+    broadcast(new NewMessage($reply))->toOthers();
+
+    return $reply;
+}
+
+
+
+
+
 }
