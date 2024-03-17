@@ -23,7 +23,6 @@ Broadcast::channel('groups.{group}', function ($user, Group $group) {
     return $group->hasUser($user->id);
 });
 
-Broadcast::routes();
 
 
 

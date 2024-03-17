@@ -84,7 +84,7 @@ Route::put('nurse/getProfile/{id}', [AdminController::class, 'updateuser']);
     Route::post('/conversations/{conversation}/reply', [ConversationController::class, 'reply']);
 
 
- 
+
 
 
 
