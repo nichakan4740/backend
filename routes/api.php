@@ -76,23 +76,11 @@ Route::put('nurse/getProfile/{id}', [AdminController::class, 'updateuser']);
 
 
 
+
+
 /* chat */
-Route::get('/homechat', [HomeController::class, 'index']);
-
-Auth::routes();
-
-
-
-
-/* เพิ่ม */
-
-    # routes/web.php
-/*     Route::resource('groups', 'GroupController'); */
     Route::apiResource('/groups', GroupController::class);
-
     Route::apiResource('/conversations', ConversationController::class);
-
-
     Route::post('/conversations/{conversation}/reply', [ConversationController::class, 'reply']);
 
 
