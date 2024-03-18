@@ -15,13 +15,8 @@
             Schema::create('conversations', function (Blueprint $table) {
                 $table->id();
                 $table->text('message')->nullable();
-              /*   $table->unsignedInteger('user_id');
-                $table->unsignedInteger('admin_id');
-                $table->unsignedInteger('group_id'); */
-
                 $table->foreignId('user_id')->constrained('users');
                 $table->foreignId('admin_id')->constrained('admins');
-                $table->foreignId('group_id')->constrained('groups');
                 $table->timestamps();
             });
         }

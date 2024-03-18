@@ -14,9 +14,6 @@ class Controller extends BaseController
     public  function TestChat(){
         $text = 'wow';
         event(new LiveChat($text));
-//        DB::table('log_chat')->insert([
-//            'text' => $text
-//        ]);
         return 'Send Message Success';
     }
 }
