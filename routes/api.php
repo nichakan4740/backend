@@ -18,9 +18,12 @@ use App\Http\Controllers\ConversationController;
 
 
 
+<<<<<<< HEAD
+=======
 use App\Http\Controllers\AdminController;
 
 
+>>>>>>> 44e1918780b5411d5feb5dee86570d0df5cd4e70
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -52,8 +55,11 @@ Route::post('patient/logout', [AuthUser::class,'logout']);
 
 /* ข้อมูลยา */
 Route::get('drug/{id}', [DrugInformationController::class,'showDrug']);
-Route::post('drug', [DrugInformationController::class,'createDrug']);
+Route::post('savedrug', [DrugInformationController::class,'createDrug']);
 Route::put('drug/{id}', [DrugInformationController::class,'updateDrug']);
+//เช็คข้อมูลยา 
+// Route::get('/check-drug-information', 'DrugInformationController@checkDrugInformation');
+Route::get('/check-data/{id}', [DrugInformationController::class, 'checkDrugInformation']);
 
 
 
@@ -84,6 +90,8 @@ Route::put('nurse/getProfile/{id}', [AdminController::class, 'updateuser']);
     Route::post('/conversations/{conversation}/reply', [ConversationController::class, 'reply']);
 
 
+
+    Route::apiResource('/conversations', ConversationController::class);
 
 
 

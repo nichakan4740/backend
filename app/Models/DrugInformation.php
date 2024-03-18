@@ -24,5 +24,9 @@ class DrugInformation extends Model
         return $this->belongsTo(User::class);
     }
 
+    public static function hasDataDrug(string $id)
+    {
+        return self::where('user_id', $id)->exists();
+    }
 
 }
