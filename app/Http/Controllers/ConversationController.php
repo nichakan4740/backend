@@ -5,31 +5,59 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Conversation;
 use App\Events\NewMessage;
-use App\Models\User; // นำเข้า User model
+use App\Models\User; 
+use App\Models\Admin;
+use Illuminate\Support\Facades\Auth;
 
 
 class ConversationController extends Controller
 {
     public function store(Request $request)
-    {
-        // รับ ID ของ admin จาก request
-        $adminId = $request->input('admin_id');
+{
+    // รับข้อความจาก request
+    $message = $request->input('message');
     
+    // ดึงข้อมูล admin ทั้งหมด
+    $admins = Admin::all();
+    
+    // ตั้งค่าตัวแปรสำหรับเก็บข้อมูลการส่งข้อความ
+    $messages = [];
+    $success = true;
+
+    // สร้างข้อความใหม่และส่งไปยังทุก admin
+    foreach ($admins as $admin) {
         // สร้างข้อความใหม่
         $conversation = Conversation::create([
-            'message' => $request->input('message'),
+            'message' => $message,
             'user_id' => $request->input('user_id'),
-            'admin_id' => $adminId, 
+            'admin_id' => $admin->id, 
         ]);
     
-        // โหลดข้อมูลผู้ใช้ที่ส่งข้อความ
-        $conversation->load('user');
+        // ตรวจสอบว่าสร้างข้อความสำเร็จหรือไม่
+        if (!$conversation) {
+            $success = false;
+            break; // หยุดการทำงานเมื่อเกิดข้อผิดพลาด
+        }
+
+        // เก็บข้อความที่ส่งไปยัง admin ล่าสุด
+        $messages[] = $conversation->message;
     
         // ส่งอีเวนต์ให้กับผู้ใช้อื่น
         broadcast(new NewMessage($conversation))->toOthers();
-    
-        return $conversation;
     }
+
+    // ตรวจสอบสถานะการส่งข้อความ
+    if ($success) {
+        // ส่งข้อความที่ส่งไปมาในรูปแบบ JSON
+        return response()->json(['messages' => $messages[0], 'message' => 'Messages sent to all admins successfully']);
+    } else {
+        // ส่งข้อความข้อผิดพลาดในกรณีที่ไม่สามารถส่งข้อความไปยังทุก admin ได้
+        return response()->json(['error' => 'Unable to send messages'], 500);
+    }
+}
+
+
+
 
     /* ตอบกลับ */
     public function reply(Request $request, Conversation $conversation)
@@ -61,31 +89,38 @@ class ConversationController extends Controller
 
 
 
-
-    /* ดูว่าใครคุยกับใคร  */
-    private function findConversation($userId, $adminId) {
-        $conversation = Conversation::where('user_id', $userId)
-                                     ->where('admin_id', $adminId)
-                                     ->first();
-        if ($conversation) {
-            // ถ้ามี conversation ระหว่าง user_id กับ admin_id ที่กำหนด
-            if ($userId) {
-                // ในกรณีที่ user_id ไม่ใช่ null
-                // คุณสามารถดำเนินการต่อได้ตามต้องการ เช่น โหลดข้อมูลผู้ใช้ที่ส่งข้อความ
-                $conversation->load('user');
-            } elseif ($adminId) {
-                // ในกรณีที่ admin_id ไม่ใช่ null
-                // คุณสามารถดำเนินการต่อได้ตามต้องการ เช่น โหลดข้อมูล admin
-                $conversation->load('admin');
-            }
+/* ------------------------------------------------------------------------------------------------ */
+    /* show ข้อความ */
+    public function showMessageUser(Request $request)
+    {
+        // รับ ID ของ admin จาก request
+        $adminId = $request->input('admin_id');
+        
+        // ค้นหาข้อความทั้งหมดที่ถูกส่งจากผู้ใช้ที่ไม่ใช่ admin นี้
+        $messages = Conversation::where('admin_id', '!=', $adminId)
+                                 ->with('user') // โหลดข้อมูลของผู้ใช้ที่ส่งข้อความ
+                                 ->get();
     
-            // คุณสามารถดำเนินการอื่น ๆ ต่อไปได้ตามต้องการ
-        } else {
-            // ถ้าไม่พบ conversation ระหว่าง user_id กับ admin_id ที่กำหนด
-            // คุณสามารถจัดการในกรณีนี้ตามต้องการ
-        }
-    
-        return $conversation; // คืนค่า conversation ที่พบ (หรือ null หากไม่พบ)
+        // คืนค่าข้อความในรูปแบบ JSON
+        return response()->json(['messages' => $messages]);
     }
+      
+    
+
+    /* ----------------------------------------------------------- */
+    
+    public function deleteMessage(Request $request, $messageId)
+    {
+        // ค้นหาข้อความที่ต้องการลบ
+        $message = Conversation::findOrFail($messageId);
+    
+        // ลบข้อความ
+        $message->delete();
+        
+        // ส่งข้อความยืนยันการลบ
+        return response()->json(['message' => 'Message deleted successfully']);
+    }
+    
+
     
 }

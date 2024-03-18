@@ -16,14 +16,10 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ConversationController;
 
-
-
-<<<<<<< HEAD
-=======
 use App\Http\Controllers\AdminController;
 
 
->>>>>>> 44e1918780b5411d5feb5dee86570d0df5cd4e70
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -85,13 +81,12 @@ Route::put('nurse/getProfile/{id}', [AdminController::class, 'updateuser']);
 
 
 /* chat */
-    Route::apiResource('/groups', GroupController::class);
     Route::apiResource('/conversations', ConversationController::class);
-    Route::post('/conversations/{conversation}/reply', [ConversationController::class, 'reply']);
+    Route::post('/conversation/reply/{conversation}', [ConversationController::class, 'reply']); // เส้นทางสำหรับตอบกลับ conversation
+    Route::get('/conversation/showMessageUser', [ConversationController::class, 'showMessageUser']); // เส้นทางสำหรับแสดงข้อความของผู้ใช้
 
+    Route::delete('/messages/{messageId}', [ConversationController::class ,'deleteMessage']);
 
-
-    Route::apiResource('/conversations', ConversationController::class);
 
 
 
