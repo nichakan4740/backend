@@ -19,4 +19,16 @@ class Controller extends BaseController
 //        ]);
         return 'Send Message Success';
     }
+
+    public function checkDataForUser($id)
+    {
+        // เรียกใช้งานฟังก์ชัน hasDataForUser() จาก Model
+        $hasData = DrugInformation::hasDataDrug($id);
+        
+        // ส่งผลลัพธ์กลับไปยัง Frontend ในรูปแบบ JSON
+        return response()->json(['hasData' => $hasData]);
+    }
+
 }
+
+

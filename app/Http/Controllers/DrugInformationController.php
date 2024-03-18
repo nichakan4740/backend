@@ -16,14 +16,16 @@ class DrugInformationController extends Controller
         $this->drugInformation = new DrugInformation();
     }
     
-
-/* สร้างข้อมูลยา */
-public function createDrug(Request $request)
-{
-    $validator = Validator::make($request->all(), [
+    /* สร้างข้อมูลยา */
+    public function createDrug(Request $request)
+    {
+    $validator = Validator::make($request->data, [
         'allergic_drug' => 'required|string|max:500',
         'my_drug' => 'required|string|max:500',
         'user_id' => 'required',
+    ],[],[
+        'allergic_drug' => 'ยาที่แพ้',
+        'my_drug' => 'ยาที่ใช้ประจำ',
     ]);
 
     if ($validator->fails()) {
@@ -32,9 +34,9 @@ public function createDrug(Request $request)
 
     try {
         $drugInformation = DrugInformation::create([
-            'allergic_drug' => $request->allergic_drug,
-            'my_drug' => $request->my_drug,
-            'user_id' => $request->user_id,
+            'allergic_drug' => $request->data['allergic_drug'],
+            'my_drug' => $request->data['my_drug'],
+            'user_id' => $request->data['user_id'],
         ]);
 
         return response()->json(['message' => 'Drug Information created successfully', 'drugInformation' => $drugInformation], 201);
@@ -88,5 +90,17 @@ public function updateDrug(Request $request)
     }
 }
 
+
+// ตรวจสอบว่ามีข้อมูลยารึยัง
+public function checkDrugInformation(string $id)
+    {
+        // เช็คว่ามีข้อมูลในตารางหรือไม่สำหรับ userId ที่กำหนด
+        $hasData = DrugInformation::where('user_id', $id)
+                                  ->whereNotNull('allergic_drug')
+                                  ->whereNotNull('my_drug')
+                                  ->exists();
+
+        return response()->json(['hasData' => $hasData]);
+    }
 
 }

@@ -21,7 +21,7 @@ class MysugarController extends Controller
     public function index()
     {
         $data = $this->mysugar->with(['user' => function ($query) {
-                                     $query->select('id', 'fname', 'lname','allergic_drug','my_drug','idcard');
+                                     $query->select('id', 'fname', 'lname','idcard');
                                  }])
                                ->get();
     

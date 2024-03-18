@@ -15,6 +15,9 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ConversationController;
+
+
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -44,8 +47,11 @@ Route::post('patient/logout', [AuthUser::class,'logout']);
 
 /* ข้อมูลยา */
 Route::get('drug/{id}', [DrugInformationController::class,'showDrug']);
-Route::post('drug', [DrugInformationController::class,'createDrug']);
+Route::post('savedrug', [DrugInformationController::class,'createDrug']);
 Route::put('drug/{id}', [DrugInformationController::class,'updateDrug']);
+//เช็คข้อมูลยา 
+// Route::get('/check-drug-information', 'DrugInformationController@checkDrugInformation');
+Route::get('/check-data/{id}', [DrugInformationController::class, 'checkDrugInformation']);
 
 
 /* get รายละเอียดผู้ป่วย  */
@@ -97,7 +103,7 @@ Route::get('/show_messages/{id}', [MessageController::class, 'show_messages']); 
     Route::apiResource('/groups', GroupController::class);
 
     Route::apiResource('/conversations', ConversationController::class);
- 
+
 
 
 
