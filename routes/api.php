@@ -18,6 +18,12 @@ use App\Http\Controllers\ConversationController;
 
 
 
+<<<<<<< HEAD
+=======
+use App\Http\Controllers\AdminController;
+
+
+>>>>>>> 44e1918780b5411d5feb5dee86570d0df5cd4e70
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -45,6 +51,8 @@ Route::post('patient/refresh', [AuthUser::class,'refresh']);
 Route::post('patient/logout', [AuthUser::class,'logout']);
 
 
+
+
 /* ข้อมูลยา */
 Route::get('drug/{id}', [DrugInformationController::class,'showDrug']);
 Route::post('savedrug', [DrugInformationController::class,'createDrug']);
@@ -54,6 +62,9 @@ Route::put('drug/{id}', [DrugInformationController::class,'updateDrug']);
 Route::get('/check-data/{id}', [DrugInformationController::class, 'checkDrugInformation']);
 
 
+
+
+
 /* get รายละเอียดผู้ป่วย  */
 Route::get('patient/getProfile', [UserController::class,'indexuser']);
 Route::get('patient/getProfile/{id}', [UserController::class,'showuserwithid']);
@@ -61,46 +72,24 @@ Route::delete('patient/getProfile/{id}', [UserController::class, 'destroyuser'])
 Route::put('patient/getProfile/{id}', [UserController::class, 'updateuser']);
 
 
+/* get รายละเอียดพยาบาล */
+Route::get('nurse/getProfile', [AdminController::class,'indexuser']);
+Route::get('nurse/getProfile/{id}', [AdminController::class,'showuserwithid']);
+Route::delete('nurse/getProfile/{id}', [AdminController::class, 'destroyuser']);
+Route::put('nurse/getProfile/{id}', [AdminController::class, 'updateuser']);
 
-/* chat */
-Route::get('/homechat', [HomeController::class, 'index']);
-
-Auth::routes();
-
-/* Route::get('/group/create', [GroupController::class, 'create_form']);
-
-Route::post('/group/create', [GroupController::class ,'create']);
-
-Route::get('/group/join', [GroupController::class , 'join_form']);
-
-Route::post('/group/join', [GroupController::class,  'join']);
-
-Route::get('/group/{id}', [GroupController::class, 'show_group']);
-
-Route::get('/group/edit/{id}', [GroupController::class, 'edit']);
-
-Route::post('/group/update/{id}', [GroupController::class, 'update']);
-
-Route::delete('/group/delete/{id}', [GroupController::class, 'delete']);
-
-Route::get('/group/members_list/{id}', [GroupController::class, 'members_list']);
-
-Route::get('/remove_user/{id}/{user_id}', [GroupController::class, 'remove_user']);
-
-Route::post('/send_message/{id}', [MessageController::class, 'send_message']);
-
-Route::get('/show_messages/{id}', [MessageController::class, 'show_messages']); */
 
 
 
 
 
 
-/* เพิ่ม */
-
-    # routes/web.php
-/*     Route::resource('groups', 'GroupController'); */
+/* chat */
     Route::apiResource('/groups', GroupController::class);
+    Route::apiResource('/conversations', ConversationController::class);
+    Route::post('/conversations/{conversation}/reply', [ConversationController::class, 'reply']);
+
+
 
     Route::apiResource('/conversations', ConversationController::class);
 

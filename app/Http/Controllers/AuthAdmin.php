@@ -98,19 +98,9 @@ public function loginAdmin(Request $request)
     }
 
 
-
-
     /* ----------------------------------------------------------------------------------------- */
    
-/* public function getProfile(Request $request)
-{
-    $user = $request->user();
-
-    return response()->json([
-        'status' => 'success',
-        'user' => $user,
-    ]);
-}
+/*
 
 public function updateProfile(Request $request)
 {
