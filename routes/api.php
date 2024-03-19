@@ -84,6 +84,9 @@ Route::put('nurse/getProfile/{id}', [AdminController::class, 'updateuser']);
     Route::apiResource('/conversations', ConversationController::class);
     Route::post('/conversation/reply/{conversation}', [ConversationController::class, 'reply']); // เส้นทางสำหรับตอบกลับ conversation
     Route::get('/conversation/showMessageUser', [ConversationController::class, 'showMessageUser']); // เส้นทางสำหรับแสดงข้อความของผู้ใช้
+    Route::get('/conversation/showMessageUser/{admin_id}', [ConversationController::class, 'showMessageUserWithAdminId']);
+
+
 
     Route::delete('/messages/{messageId}', [ConversationController::class ,'deleteMessage']);
 

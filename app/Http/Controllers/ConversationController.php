@@ -1,13 +1,18 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Event;
 use Illuminate\Http\Request;
 use App\Models\Conversation;
 use App\Events\NewMessage;
 use App\Models\User; 
 use App\Models\Admin;
 use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 
 class ConversationController extends Controller
@@ -41,6 +46,9 @@ class ConversationController extends Controller
 
         // เก็บข้อความที่ส่งไปยัง admin ล่าสุด
         $messages[] = $conversation->message;
+
+
+        Event::dispatch(new NewMessage($conversation)); // เพิ่มบรรทัดนี้
     
         // ส่งอีเวนต์ให้กับผู้ใช้อื่น
         broadcast(new NewMessage($conversation))->toOthers();
@@ -49,7 +57,7 @@ class ConversationController extends Controller
     // ตรวจสอบสถานะการส่งข้อความ
     if ($success) {
         // ส่งข้อความที่ส่งไปมาในรูปแบบ JSON
-        return response()->json(['messages' => $messages[0], 'message' => 'Messages sent to all admins successfully']);
+        return response()->json(['messages' => $messages[0]]);
     } else {
         // ส่งข้อความข้อผิดพลาดในกรณีที่ไม่สามารถส่งข้อความไปยังทุก admin ได้
         return response()->json(['error' => 'Unable to send messages'], 500);
@@ -81,6 +89,7 @@ class ConversationController extends Controller
             $reply->load('admin');
         }
 
+        Event::dispatch(new NewMessage($reply));
         // ส่งอีเวนต์ให้กับผู้ใช้อื่น
         broadcast(new NewMessage($reply))->toOthers();
 
@@ -98,12 +107,27 @@ class ConversationController extends Controller
         
         // ค้นหาข้อความทั้งหมดที่ถูกส่งจากผู้ใช้ที่ไม่ใช่ admin นี้
         $messages = Conversation::where('admin_id', '!=', $adminId)
-                                 ->with('user') // โหลดข้อมูลของผู้ใช้ที่ส่งข้อความ
+                                 ->with('user' ) // โหลดข้อมูลของผู้ใช้ที่ส่งข้อความ
                                  ->get();
     
         // คืนค่าข้อความในรูปแบบ JSON
         return response()->json(['messages' => $messages]);
     }
+
+    
+
+    /* แสดงข้อความโดยใช้ admin_id */
+      public function showMessageUserWithAdminId(Request $request, $adminId)
+    {
+    // ค้นหาข้อความทั้งหมดที่ถูกส่งโดยผู้ใช้ที่ไม่ใช่ admin นี้และส่งไปยัง admin ที่มี admin_id ที่ระบุ
+    $messages = Conversation::where('admin_id', $adminId)
+                             ->with('user') // โหลดข้อมูลของผู้ใช้ที่ส่งข้อความ
+                             ->get();
+
+    // คืนค่าข้อความในรูปแบบ JSON
+    return response()->json(['messages' => $messages]);
+}
+
       
     
 
