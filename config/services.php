@@ -31,4 +31,15 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'pusher' => [
+        'key' => env('c38b6cfa9a4f7e26bf76'),
+        'secret' => env('9c01e9989d46534a826a'),
+        'app_id' => env('1766073'),
+        'options' => [
+            'cluster' => env('api'),
+            'useTLS' => true,
+        ],
+    ],
+    
+
 ];

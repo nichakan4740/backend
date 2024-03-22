@@ -20,6 +20,10 @@ use App\Http\Controllers\AdminController;
 
 
 
+
+/* Test */
+use App\Http\Controllers\Controller;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -90,6 +94,8 @@ Route::put('nurse/getProfile/{id}', [AdminController::class, 'updateuser']);
 
     Route::delete('/messages/{messageId}', [ConversationController::class ,'deleteMessage']);
 
+
+    Route::post('/testchat', [Controller::class, 'TestChat']);
 
 
 
