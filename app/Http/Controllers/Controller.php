@@ -13,6 +13,8 @@ use Pusher\Pusher;
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests,DispatchesJobs;
+
+
     public function TestChat()
     {
         $text = 'wow';
@@ -37,6 +39,9 @@ class Controller extends BaseController
     }
 
 
+
+
+    
     public function checkDataForUser($id)
     {
         // เรียกใช้งานฟังก์ชัน hasDataForUser() จาก Model
