@@ -1,65 +1,172 @@
 <?php
+
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Http\Request;
 use App\Models\Conversation;
 use App\Events\NewMessage;
+use App\Models\User; 
+use App\Models\Admin;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use App\Events\LiveChat;
+use Pusher\Pusher;
+
+
 class ConversationController extends Controller
+
 {
+    use AuthorizesRequests, ValidatesRequests,DispatchesJobs;
+
     public function store(Request $request)
     {
-        // รับ ID ของ admin จาก request
-        $adminId = $request->input('admin_id');
+        // รับข้อความจาก request
+        $message = $request->input('message');
     
-        // สร้างข้อความใหม่
-        $conversation = Conversation::create([
-            'message' => $request->input('message'),
-            'group_id' => $request->input('group_id'),
-            'user_id' => $request->input('user_id'),
-            'admin_id' => $adminId, 
-        ]);
+        // ดึงข้อมูล admin ทั้งหมด
+        $admins = Admin::all();
     
-        // โหลดข้อมูลผู้ใช้ที่ส่งข้อความ
-        $conversation->load('user');
+        // ตั้งค่าตัวแปรสำหรับเก็บข้อมูลการส่งข้อความ
+        $messages = [];
+        $success = true;
     
-        // ส่งอีเวนต์ให้กับผู้ใช้อื่น
-        broadcast(new NewMessage($conversation))->toOthers();
+        // ส่งข้อความใหม่ไปยังทุก admin และส่งอีเวนท์ผ่าน Pusher
+        foreach ($admins as $admin) {
+            // สร้างข้อความใหม่
+            $conversation = Conversation::create([
+                'message' => $message,
+                'user_id' => $request->input('user_id'),
+                'admin_id' => $admin->id,
+            ]);
     
-        return $conversation;
+            // ตรวจสอบว่าสร้างข้อความสำเร็จหรือไม่
+            if (!$conversation) {
+                $success = false;
+                break; // หยุดการทำงานเมื่อเกิดข้อผิดพลาด
+            }
+    
+            // เก็บข้อความที่ส่งไปยัง admin ล่าสุด
+            $messages[] = $conversation->message;
+    
+            Event::dispatch(new NewMessage($conversation)); // เพิ่มบรรทัดนี้
+    
+            // ส่งอีเวนต์ให้กับผู้ใช้อื่น
+            broadcast(new NewMessage($conversation))->toOthers();
+        }
+    
+        // pusher
+        $options = array(
+            'cluster' => 'ap1',
+            'useTLS' => true
+                );
+    
+            $pusher = new Pusher(
+                'c38b6cfa9a4f7e26bf76',
+                '9c01e9989d46534a826a',
+                '1766073',
+                $options
+              
+            );
+    
+        // ส่งข้อความด้วย Pusher
+        $pusher->trigger('live-chat', 'message', ['text' => $message]);
+    
+        // ตรวจสอบสถานะการส่งข้อความ
+        if ($success) {
+            // ส่งข้อความที่ส่งไปมาในรูปแบบ JSON
+            return response()->json(['messages' => $messages[0]]);
+        } else {
+            // ส่งข้อความข้อผิดพลาดในกรณีที่ไม่สามารถส่งข้อความไปยังทุก admin ได้
+            return response()->json(['error' => 'Unable to send messages'], 500);
+        }
     }
-
+    /* -------------------------------------------------------------------------------------------------------- */
 
 
     /* ตอบกลับ */
     public function reply(Request $request, Conversation $conversation)
-{
-    // รับ ID ของผู้ใช้หรือ admin ที่ตอบกลับ
-    $userId = $request->input('user_id');
-    $adminId = $request->input('admin_id');
+    {
+        // รับ ID ของผู้ใช้หรือ admin ที่ตอบกลับ
+        $userId = $request->input('user_id');
+        $adminId = $request->input('admin_id');
 
-    // สร้างข้อความตอบกลับ
-    $reply = Conversation::create([
-        'message' => $request->input('message'),
-        'group_id' => $conversation->group_id,
-        'user_id' => $userId,
-        'admin_id' => $adminId,
-        'parent_id' => $conversation->id, // เพิ่ม parent_id เพื่อระบุว่าเป็นการตอบกลับข้อความแชทเดิม
-    ]);
+        // สร้างข้อความตอบกลับ
+        $reply = Conversation::create([
+            'message' => $request->input('message'),
+            'user_id' => $userId,
+            'admin_id' => $adminId,
+            'parent_id' => $conversation->id, // เพิ่ม parent_id เพื่อระบุว่าเป็นการตอบกลับข้อความแชทเดิม
+        ]);
 
-    // โหลดข้อมูลผู้ใช้ที่ส่งข้อความ
-    if ($userId) {
-        $reply->load('user');
-    } elseif ($adminId) {
-        $reply->load('admin');
+        // โหลดข้อมูลผู้ใช้ที่ส่งข้อความ
+        if ($userId) {
+            $reply->load('user');
+        } elseif ($adminId) {
+            $reply->load('admin');
+        }
+
+        Event::dispatch(new NewMessage($reply));
+        // ส่งอีเวนต์ให้กับผู้ใช้อื่น
+        broadcast(new NewMessage($reply))->toOthers();
+
+        return $reply;
     }
 
-    // ส่งอีเวนต์ให้กับผู้ใช้อื่น
-    broadcast(new NewMessage($reply))->toOthers();
 
-    return $reply;
+
+/* ------------------------------------------------------------------------------------------------ */
+    /* show ข้อความ */
+    public function showMessageUser(Request $request)
+    {
+        // รับ ID ของ admin จาก request
+        $adminId = $request->input('admin_id');
+        
+        // ค้นหาข้อความทั้งหมดที่ถูกส่งจากผู้ใช้ที่ไม่ใช่ admin นี้
+        $messages = Conversation::where('admin_id', '!=', $adminId)
+                                 ->with('user' ) // โหลดข้อมูลของผู้ใช้ที่ส่งข้อความ
+                                 ->get();
+    
+        // คืนค่าข้อความในรูปแบบ JSON
+        return response()->json(['messages' => $messages]);
+    }
+
+    
+
+    /* แสดงข้อความโดยใช้ admin_id */
+      public function showMessageUserWithAdminId(Request $request, $adminId)
+    {
+    // ค้นหาข้อความทั้งหมดที่ถูกส่งโดยผู้ใช้ที่ไม่ใช่ admin นี้และส่งไปยัง admin ที่มี admin_id ที่ระบุ
+    $messages = Conversation::where('admin_id', $adminId)
+                             ->with('user') // โหลดข้อมูลของผู้ใช้ที่ส่งข้อความ
+                             ->get();
+
+    // คืนค่าข้อความในรูปแบบ JSON
+    return response()->json(['messages' => $messages]);
 }
 
+      
+    
 
+    /* ----------------------------------------------------------- */
+    
+    public function deleteMessage(Request $request, $messageId)
+    {
+        // ค้นหาข้อความที่ต้องการลบ
+        $message = Conversation::findOrFail($messageId);
+    
+        // ลบข้อความ
+        $message->delete();
+        
+        // ส่งข้อความยืนยันการลบ
+        return response()->json(['message' => 'Message deleted successfully']);
+    }
+    
 
-
-
+    
 }
