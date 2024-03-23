@@ -50,7 +50,28 @@ class ConversationController extends Controller
                 $success = false;
                 break; // หยุดการทำงานเมื่อเกิดข้อผิดพลาด
             }
-    
+
+
+            // โหลดข้อมูลผู้ใช้จากฐานข้อมูล
+            $user = User::find($request->input('user_id'));
+
+
+
+            // สร้างอาร์เรย์เพื่อเก็บ admin id ทั้งหมด
+            $adminIds = [];
+            foreach ($admins as $admin) {
+            $adminIds[] = $admin->id;
+             }
+
+            // เพิ่มข้อมูลที่ต้องการส่งไปในอาร์เรย์ของ Pusher
+            $data = [
+           'text' => $message,
+           'fname' => $user->fname, // เพิ่มข้อมูล fname ของผู้ใช้
+           'id' =>  $user->id,
+           'admin_ids' => $adminIds, // เพิ่ม admin id ทั้งหมดในอาร์เรย์
+
+        ];
+
             // เก็บข้อความที่ส่งไปยัง admin ล่าสุด
             $messages[] = $conversation->message;
     
@@ -73,10 +94,11 @@ class ConversationController extends Controller
                 $options
               
             );
-    
-        // ส่งข้อความด้วย Pusher
-        $pusher->trigger('live-chat', 'message', ['text' => $message]);
-    
+
+
+     // ส่งข้อความด้วย Pusher
+    $pusher->trigger('live-chat', 'message', $data);
+
         // ตรวจสอบสถานะการส่งข้อความ
         if ($success) {
             // ส่งข้อความที่ส่งไปมาในรูปแบบ JSON
@@ -117,56 +139,5 @@ class ConversationController extends Controller
 
         return $reply;
     }
-
-
-
-/* ------------------------------------------------------------------------------------------------ */
-    /* show ข้อความ */
-    public function showMessageUser(Request $request)
-    {
-        // รับ ID ของ admin จาก request
-        $adminId = $request->input('admin_id');
-        
-        // ค้นหาข้อความทั้งหมดที่ถูกส่งจากผู้ใช้ที่ไม่ใช่ admin นี้
-        $messages = Conversation::where('admin_id', '!=', $adminId)
-                                 ->with('user' ) // โหลดข้อมูลของผู้ใช้ที่ส่งข้อความ
-                                 ->get();
-    
-        // คืนค่าข้อความในรูปแบบ JSON
-        return response()->json(['messages' => $messages]);
-    }
-
-    
-
-    /* แสดงข้อความโดยใช้ admin_id */
-      public function showMessageUserWithAdminId(Request $request, $adminId)
-    {
-    // ค้นหาข้อความทั้งหมดที่ถูกส่งโดยผู้ใช้ที่ไม่ใช่ admin นี้และส่งไปยัง admin ที่มี admin_id ที่ระบุ
-    $messages = Conversation::where('admin_id', $adminId)
-                             ->with('user') // โหลดข้อมูลของผู้ใช้ที่ส่งข้อความ
-                             ->get();
-
-    // คืนค่าข้อความในรูปแบบ JSON
-    return response()->json(['messages' => $messages]);
-}
-
-      
-    
-
-    /* ----------------------------------------------------------- */
-    
-    public function deleteMessage(Request $request, $messageId)
-    {
-        // ค้นหาข้อความที่ต้องการลบ
-        $message = Conversation::findOrFail($messageId);
-    
-        // ลบข้อความ
-        $message->delete();
-        
-        // ส่งข้อความยืนยันการลบ
-        return response()->json(['message' => 'Message deleted successfully']);
-    }
-    
-
-    
+  
 }
