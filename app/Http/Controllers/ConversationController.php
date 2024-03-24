@@ -104,6 +104,7 @@ class ConversationController extends Controller
   
 }
 
+/* ----------------------------------------------------------------------------------------------------------- */
 public function Adminrespondsuser(Request $request)
 {
     $message = $request->input('message'); // รับข้อความจาก request
@@ -158,7 +159,7 @@ public function Adminrespondsuser(Request $request)
     );
 
     // ส่งข้อความด้วย Pusher
-    $pusher->trigger('live-chat', 'message', $data);
+    $pusher->trigger('reply', 'message', $data);
 
     // ส่งข้อความที่ส่งไปมาในรูปแบบ JSON
     return response()->json([
