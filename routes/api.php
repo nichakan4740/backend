@@ -85,8 +85,9 @@ Route::put('nurse/getProfile/{id}', [AdminController::class, 'updateuser']);
 
 
     /* chat */
-    Route::apiResource('/conversations', ConversationController::class);
-
+    /* Route::apiResource('/conversations', ConversationController::class);
+ */
+    Route::post('/conversations', [ConversationController::class, 'store']);
     /* ตอบกลับข้อความ */
     Route::post('/conversation/reply', [ConversationController::class, 'Adminrespondsuser']); // เส้นทางสำหรับตอบกลับ conversation
    
