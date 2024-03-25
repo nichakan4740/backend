@@ -33,11 +33,12 @@ class DrugInformationController extends Controller
     }
 
     try {
-        $drugInformation = DrugInformation::create([
+        $drugInformation = DrugInformation::createDrug([
             'allergic_drug' => $request->data['allergic_drug'],
             'my_drug' => $request->data['my_drug'],
             'user_id' => $request->data['user_id'],
         ]);
+        
 
         return response()->json(['message' => 'Drug Information created successfully', 'drugInformation' => $drugInformation], 201);
     } catch (\Exception $e) {
@@ -74,7 +75,7 @@ public function updateDrug(Request $request)
     }
 
     try {
-        $drugInformation = DrugInformation::findOrFail($request->id);
+        $drugInformation = DrugInformation::where('user_id', $request->user_id)->firstOrFail();
 
         $drugInformation->fill($request->all())->save();
 
