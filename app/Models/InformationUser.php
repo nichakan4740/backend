@@ -8,9 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class InformationUser extends Model
 {
     use HasFactory;
-    protected $table = 'informations_user'; // ระบุชื่อตารางที่ถูกต้อง
+    protected $table = 'information_user'; // ระบุชื่อตารางที่ถูกต้อง
     protected $fillable = [
         'dob', 
+        'phone',
         // 'age', 
         'address', 
         'user_id'];
@@ -22,10 +23,6 @@ class InformationUser extends Model
         return $this->belongsTo(User::class);
     }
 
-    // public function getAge()
-    // {
-    //     $this->birthdate->diff($this->attributes['dob'])
-    //     ->format('%y years, %m months and %d days');
-    // }
+
 
 }

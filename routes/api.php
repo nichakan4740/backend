@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthAdmin;
 use App\Http\Controllers\AuthUser;
 use App\Http\Controllers\DrugInformationController;
+use App\Http\Controllers\InformationUserController;
 
 
 
@@ -62,7 +63,9 @@ Route::put('drug/{id}', [DrugInformationController::class,'updateDrug']);
 Route::get('/check-data/{id}', [DrugInformationController::class, 'checkDrugInformation']);
 
 
-
+// ข้อมูลผู้ป่วย
+Route::put('updateinfo', [InformationUserController::class,'updateinfouser']);
+Route::get('info/{id}', [InformationUserController::class,'showinfo']);
 
 
 /* get รายละเอียดผู้ป่วย  */

@@ -3,27 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Models\InformationUser;
+use App\Models\User;
 use Illuminate\Http\Request;
-
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Validator;
 
 class InformationUserController extends Controller
 {
-    protected $informations_user;
+    protected $information_user;
    
     public function __construct()
     {
-        $this->InformationUser = new InformationUser();
+        $this->informationUser = new InformationUser();
     }
+
 
     /**
      * Show the form for creating a new resource.
      */
-    public function createinfouser()
+    public function updateinfouser(Request $request)
     {
         $validator = Validator::make($request->data, [
             'dob' => 'required',
+            'phone' => 'required|string|max:10',
             // 'age' => 'required',
-            'address' => 'required',
+            'address' => 'required|string|max:500',
             'user_id' => 'required',
         ],[],[
             'address' => 'ที่อยู่',
@@ -34,14 +38,20 @@ class InformationUserController extends Controller
         }
     
         try {
-            $Information = InformationUser::create([
-                'dob' => $request->data['dob'],
-                // 'age' => $request->data['age'],
-                'address' => $request->data['address'],
-                'user_id' => $request->data['user_id'],
-            ]);
+            $informationUser = InformationUser::firstornew(['user_id'=>$request->data['user_id']]);
+            $informationUser->dob=$request->data['dob'];
+            $informationUser->phone=$request->data['phone'];
+            $informationUser->address=$request->data['address'];
+            $informationUser->user_id=$request->data['user_id'];
+            $informationUser->save();
+
+            $User = User::firstornew(['id'=>$request->data['user_id']]);
+            $User->fname=$request->data['fname'];
+            $User->lname=$request->data['lname'];
+            $User->idcard=$request->data['idcard'];
+            $User->save();
     
-            return response()->json(['message' => 'Information created successfully', 'InformationUser' => $InformationUser], 201);
+            return response()->json(['message' => 'Information updated successfully', 'InformationUser' => $informationUser, $User], 201);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Failed to create Information', 'error' => $e->getMessage()], 500);
         }
@@ -58,13 +68,13 @@ class InformationUserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function showinfo(string $id)
     {
-        $Information = InformationUser::where('user_id', $id)->get();
-        if ($Information->isEmpty()) {
+        $information = InformationUser::where('user_id', $id)->get();
+        if ($information->isEmpty()) {
             return response()->json(['message' => 'Information not found'], 404);
         }
-        return $Information;
+        return $information;
     }
 
 
@@ -84,10 +94,5 @@ class InformationUserController extends Controller
         //
     }
 
-    // คำนวนอายุ
-    // public function index()   
-    // {   
-    //     $profile   = User::find($this->userid())->profiledetailsHasOne;  //This has Dob field                   
-    //     return view('profile.index',['profile' => $profile ]); 
-    // }
+    
 }
