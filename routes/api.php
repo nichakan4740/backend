@@ -87,17 +87,14 @@ Route::put('nurse/getProfile/{id}', [AdminController::class, 'updateuser']);
 
 
 
-/* chat */
+    /* chat */
     Route::apiResource('/conversations', ConversationController::class);
-    Route::post('/conversation/reply/{conversation}', [ConversationController::class, 'reply']); // เส้นทางสำหรับตอบกลับ conversation
-    Route::get('/conversation/showMessageUser', [ConversationController::class, 'showMessageUser']); // เส้นทางสำหรับแสดงข้อความของผู้ใช้
-    Route::get('/conversation/showMessageUser/{admin_id}', [ConversationController::class, 'showMessageUserWithAdminId']);
 
-
+    /* ตอบกลับข้อความ */
+    Route::post('/conversation/reply', [ConversationController::class, 'Adminrespondsuser']); // เส้นทางสำหรับตอบกลับ conversation
+   
 
     Route::delete('/messages/{messageId}', [ConversationController::class ,'deleteMessage']);
-
-
     Route::post('/testchat', [Controller::class, 'TestChat']);
 
 

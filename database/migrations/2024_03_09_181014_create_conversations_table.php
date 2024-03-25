@@ -17,18 +17,25 @@
                 $table->text('message')->nullable();
                 $table->foreignId('user_id')->constrained('users');
                 $table->foreignId('admin_id')->constrained('admins');
+
+                $table->unsignedBigInteger('parent_id')->nullable();
+                $table->boolean('is_reply')->default(0);
                 $table->timestamps();
             });
         }
 
         /**
-         * Reverse the migrations.
-         *
-         * @return void
-         */
-        public function down()
-        {
-            Schema::dropIfExists('conversations');
-        }
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('conversations', function (Blueprint $table) {
+            $table->dropColumn('parent_id');
+            $table->dropColumn('is_reply');
+        });
+    }
+    
     }
 
