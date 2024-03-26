@@ -90,7 +90,8 @@ Route::put('nurse/getProfile/{id}', [AdminController::class, 'updateuser']);
     /* chat */
     Route::post('/conversations', [ConversationController::class, 'store']);
     /* ตอบกลับข้อความ */
-    Route::post('/conversation/reply', [ConversationController::class, 'Adminrespondsuser']); // เส้นทางสำหรับตอบกลับ conversation
+    Route::post('/reply/user', [ConversationController::class, 'AdminReplysUser']); // เส้นทางสำหรับตอบกลับ conversation
+    Route::post('/reply/admin', [ConversationController::class, 'UserReplysAdmin']); // เส้นทางสำหรับตอบกลับ conversation
    
 
     Route::delete('/messages/{messageId}', [ConversationController::class ,'deleteMessage']);

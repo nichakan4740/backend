@@ -104,7 +104,7 @@ class ConversationController extends Controller
 
 /* ----------------------------------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------------------------------- */
-public function Adminrespondsuser(Request $request)
+public function AdminReplysUser(Request $request)
 {
     $message = $request->input('message'); // รับข้อความจาก request
     $admin_id = $request->input('admin_id'); // รับ admin_id จาก request
@@ -138,6 +138,7 @@ public function Adminrespondsuser(Request $request)
     $data = [
         'text' => $message,
         'id' =>  $user->id,
+        'fname' => $user->fname, // เพิ่มข้อมูล fname ของผู้ใช้
         'admin_ids' => [$admin->id], // เพิ่ม admin id ที่ตอบกลับเฉพาะ admin คนนี้
     ];
 
@@ -158,7 +159,72 @@ public function Adminrespondsuser(Request $request)
     );
 
     // ส่งข้อความด้วย Pusher
-    $pusher->trigger('reply', 'message', $data);
+    $pusher->trigger('replyUser', 'message', $data);
+
+    // ส่งข้อความที่ส่งไปมาในรูปแบบ JSON
+    return response()->json([
+        'message' => $message,
+        'user_id' => $request->input('user_id'),
+        'admin_id' => $admin->id
+    ]);
+}
+
+public function UserReplysAdmin(Request $request)
+{
+    $message = $request->input('message'); // รับข้อความจาก request
+    $admin_id = $request->input('admin_id'); // รับ admin_id จาก request
+
+    // ตรวจสอบว่า admin_id ที่รับมาอยู่ในรายชื่อ admin หรือไม่
+    $admin = Admin::find($admin_id);
+    if (!$admin) {
+        return response()->json(['error' => 'Admin not found'], 404);
+    }
+
+    // สร้างข้อความใหม่
+    $conversation = Conversation::create([
+        'message' => $message,
+        'user_id' => $request->input('user_id'),
+        'admin_id' => $admin->id,
+        'parent_id' => $request->input('parent_id'), // เพิ่ม parent_id ที่รับมาจาก request
+    ]);
+
+    // ตรวจสอบว่าสร้างข้อความสำเร็จหรือไม่
+    if (!$conversation) {
+        return response()->json(['error' => 'Failed to create conversation'], 500);
+    }
+
+    // โหลดข้อมูลผู้ใช้จากฐานข้อมูล
+    $user = User::find($request->input('user_id'));
+
+    // กำหนดค่าเริ่มต้นสำหรับ $parentMessageId
+    $parentMessageId = null; // หรือค่าอื่นๆ ตามที่คุณต้องการ
+
+    // เพิ่มข้อมูลที่ต้องการส่งไปในอาร์เรย์ของ Pusher
+    $data = [
+        'text' => $message,
+        'id' =>  $user->id,
+        'fname' => $user->fname, // เพิ่มข้อมูล fname ของผู้ใช้
+        'admin_ids' => [$admin->id], // เพิ่ม admin id ที่ตอบกลับเฉพาะ admin คนนี้
+    ];
+
+    // ส่งอีเวนต์ให้กับผู้ใช้อื่น
+    broadcast(new NewMessage($conversation))->toOthers();
+
+    // pusher
+    $options = array(
+        'cluster' => 'ap1',
+        'useTLS' => true
+    );
+
+    $pusher = new Pusher(
+        'c38b6cfa9a4f7e26bf76',
+        '9c01e9989d46534a826a',
+        '1766073',
+        $options
+    );
+
+    // ส่งข้อความด้วย Pusher
+    $pusher->trigger('replyAdmin', 'message', $data);
 
     // ส่งข้อความที่ส่งไปมาในรูปแบบ JSON
     return response()->json([
