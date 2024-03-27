@@ -33,7 +33,7 @@ class DrugInformationController extends Controller
     }
 
     try {
-        $drugInformation = DrugInformation::createDrug([
+        $drugInformation = DrugInformation::create([
             'allergic_drug' => $request->data['allergic_drug'],
             'my_drug' => $request->data['my_drug'],
             'user_id' => $request->data['user_id'],

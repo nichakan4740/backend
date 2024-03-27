@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Mysugar;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Pagination\Paginator;
+
 
 class MysugarController extends Controller
 {
@@ -23,7 +25,7 @@ class MysugarController extends Controller
         $data = $this->mysugar->with(['user' => function ($query) {
                                      $query->select('id', 'fname', 'lname','idcard');
                                  }])
-                               ->get();
+                               ->paginate(10);
     
         if ($data->isEmpty()) {
             return response()->json(['message' => 'ไม่มีข้อมูล'], 200);
@@ -60,14 +62,18 @@ class MysugarController extends Controller
 
 
     /** * Display ตาม id */
+
     public function show(string $id)
     {
+        // $mysugar = $this->mysugar->where('user_id', $id)->paginate(15);
+    
         $mysugar = $this->mysugar->where('user_id', $id)->get();
         if ($mysugar->isEmpty()) {
             return response()->json(['message' => 'Mysugar not found'], 404);
         }
         return $mysugar;
     }
+
     
 
     
